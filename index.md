@@ -1,17 +1,32 @@
-# 「专注空间」- Energy station
-> ——一切始于你。如果你不在乎，又有谁会在乎？——
-
-## 核心引言
-每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你更大的东西，成为一群痴迷者的一部分。
-
-## 核心板块入口
-- **Reading笔记**：碎片化思考痕迹
-- **Personal作品集**：凝练深度思考的产物
-- **话题/疑问**：要么消散，要么解决
-
-## 通用功能区域
-🔍 **搜索**：搜索笔记、作品或话题，找到你关注的内容
-📌 **筛选**：按发布时间、内容类型筛选
-
 ---
-> 核心标签：专注 | 思考 | 阅读 | 创作 | 成长
+layout: home
+hero:
+  name: Zi-chu
+  text: 「专注空间」- Energy station
+  tagline: ——一切始于你。如果你不在乎，又有谁会在乎？——
+  actions:
+    - theme: brand
+      text: 点击进入
+      link: /main
+---
+
+<style>
+/* 让内容全屏居中 */
+.VPHero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+/* 保留原有字体颜色，只调整排版 */
+.VPHeroName, .VPHeroText, .VPHeroTagline {
+  color: inherit !important;
+  margin: 0.5rem 0; /* 行间距，保持原有排版感 */
+}
+/* 按钮样式 */
+.VPHeroActions {
+  margin-top: 2rem;
+}
+</style>
