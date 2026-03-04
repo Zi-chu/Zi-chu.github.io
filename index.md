@@ -5,55 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zi-chu - 专注空间</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: initial; /* 浏览器默认字体 */
-        }
-        body {
-            background-color: #fff;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            font-family: system-ui;
         }
-        /* 第一行：Zi-chu → 蓝色 */
         .line1 {
             font-size: 48px;
             color: #0066cc;
-            margin-bottom: 20px;
+            margin: 0 0 20px 0;
         }
-        /* 第二行：专注空间 → 黑色不变 */
         .line2 {
             font-size: 24px;
             color: #333;
-            margin-bottom: 30px;
+            margin: 0 0 30px 0;
         }
-        /* 第三行：一切始于你 → 灰色 */
         .line3 {
             font-size: 18px;
-            color: #999999;
-            margin-bottom: 50px;
+            color: #999;
+            margin: 0 0 50px 0;
         }
         .enter-btn {
             padding: 10px 30px;
-            background-color: #333;
+            background: #333;
             color: #fff;
             text-decoration: none;
             font-size: 16px;
             border: none;
             cursor: pointer;
-            font-family: initial;
         }
     </style>
 </head>
 <body>
+    <div class="line1">Zi-chu</div>
     <div class="line2">「专注空间」- Energy station</div>
     <div class="line3">——一切始于你。如果你不在乎，又有谁会在乎？——</div>
     <a href="content.html" class="enter-btn">点击进入</a>
 </body>
 </html>
-
