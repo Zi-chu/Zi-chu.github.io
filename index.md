@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: initial; /* 改为浏览器默认字体 */
+            font-family: initial; /* 浏览器默认字体 */
         }
         body {
             background-color: #fff;
@@ -23,7 +23,7 @@
         /* 第一行：Zi-chu → 蓝色 */
         .line1 {
             font-size: 48px;
-            color: #0066cc; /* 蓝色不变 */
+            color: #0066cc;
             margin-bottom: 20px;
         }
         /* 第二行：专注空间 → 黑色不变 */
@@ -35,7 +35,7 @@
         /* 第三行：一切始于你 → 灰色 */
         .line3 {
             font-size: 18px;
-            color: #999999; /* 灰色不变 */
+            color: #999999;
             margin-bottom: 50px;
         }
         .enter-btn {
@@ -46,7 +46,7 @@
             font-size: 16px;
             border: none;
             cursor: pointer;
-            font-family: initial; /* 按钮也用默认字体 */
+            font-family: initial;
         }
     </style>
 </head>
@@ -57,4 +57,3 @@
     <a href="content.html" class="enter-btn">点击进入</a>
 </body>
 </html>
-
