@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui; /* 稳定的默认字体 */
+            font-family: system-ui;
         }
         body {
             background-color: #fff;
@@ -19,72 +19,65 @@
             line-height: 1.8;
             color: #333;
         }
-        /* 置顶标题：调整为下方句子的1.5倍（14px×1.5=21px）+ 紧凑间距 */
         .top-title {
-            font-size: 21px; /* 下方句子14px → 14×1.5=21px */
-            margin-bottom: 8px; /* 紧凑间距不变 */
+            font-size: 21px;
+            margin-bottom: 8px;
             border-bottom: 1px solid #eee;
-            padding-bottom: 8px; /* 内边距不变 */
+            padding-bottom: 8px;
             font-weight: bold;
         }
-        /* 顶部描述文字：紧凑间距，字号14px不变 */
         .top-desc {
-            margin-bottom: 15px; /* 紧凑间距不变 */
-            font-size: 14px; /* 基准字号，标题为其1.5倍 */
+            margin-bottom: 15px;
+            font-size: 14px;
         }
-        /* 顶部与下方内容的分隔横线（同标题下横线样式） */
         .top-divider {
             border: none;
             border-top: 1px solid #eee;
-            margin-bottom: 20px; /* 横线与下方内容间距 */
+            margin-bottom: 20px;
         }
-        /* 主体布局：左侧1份 + 右侧4份 */
         .main-layout {
             display: flex;
-            gap: 30px; /* 左右间距不变 */
+            gap: 30px;
         }
-        /* 左侧核心板块入口（1/5） */
         .nav-sidebar {
-            width: calc(100% / 5); /* 1:4比例不变 */
-            flex-shrink: 0; /* 固定比例不挤压 */
+            width: calc(100% / 5);
+            flex-shrink: 0;
         }
-        /* 导航标题缩小 */
         .nav-title {
-            font-size: 14px; /* 保持不变 */
+            font-size: 14px;
             margin-bottom: 12px;
             font-weight: bold;
             color: #444;
         }
-        /* 导航按钮：统一为首页样式 + 内容完整展示 */
         .nav-btn {
             display: block;
             width: 100%;
-            padding: 10px 15px; /* 微调内边距，适配内容完整展示 */
+            padding: 10px 15px;
             margin-bottom: 8px;
-            background-color: #333; /* 同首页按钮黑色背景 */
-            color: #fff; /* 同首页按钮白色文字 */
+            background-color: #333;
+            color: #fff;
             text-decoration: none;
-            font-size: 14px; /* 同首页按钮字号 */
-            text-align: center; /* 同首页按钮居中 */
+            font-size: 14px;
+            text-align: center;
             cursor: pointer;
-            border: none; /* 去掉原边框 */
-            border-radius: 0; /* 去掉原圆角，同首页按钮 */
+            border: none;
+            border-radius: 0;
             transition: background-color 0.2s;
-            /* 移除省略号，确保内容完整展示 */
-            white-space: normal; /* 取消强制不换行 */
-            overflow: visible; /* 取消溢出隐藏 */
-            text-overflow: clip; /* 取消省略号 */
-            line-height: 1.4; /* 适配可能的换行，保证垂直居中 */
-            height: auto; /* 取消固定高度，自适应内容 */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            line-height: 1.4;
+            height: auto;
         }
         .nav-btn:hover {
-            background-color: #555; /* 悬浮略浅，提升交互 */
+            background-color: #555;
         }
-        /* 右侧展示区（4/5） */
+        .nav-btn.active {
+            background-color: #0066cc;
+        }
         .right-area {
-            width: calc(400% / 5); /* 1:4比例不变 */
+            width: calc(400% / 5);
         }
-        /* 通用功能区域样式不变 */
         .function-area {
             margin-bottom: 15px;
             font-size: 14px;
@@ -94,7 +87,6 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-        /* 右侧展示框样式不变 */
         .content-display {
             width: 100%;
             min-height: 600px;
@@ -102,13 +94,34 @@
             border-radius: 6px;
             padding: 8px 20px;
             background-color: #fafafa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: #666;
         }
-        /* 返回按钮样式不变 */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .content-section h2 {
+            font-size: 21px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            font-weight: bold;
+        }
+        .content-section h3 {
+            font-size: 16px;
+            margin: 15px 0 8px;
+            font-weight: bold;
+        }
+        .content-section p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .content-section hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
         .back-btn {
             margin-top: 30px;
             padding: 8px 20px;
@@ -117,36 +130,84 @@
             text-decoration: none;
             font-size: 14px;
             border-radius: 4px;
+            display: inline-block;
+        }
+        .back-btn:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
-    <!-- 顶部标题区：紧凑布局 + 新增类名 -->
     <div class="top-title">最佳沉浸式Daily time</div>
-    <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你更大的东西，成为一群痴迷者的一部分。</p>
-    <!-- 顶部与下方内容的分隔横线 -->
+    <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你想象中更强大的习惯。</p>
     <hr class="top-divider">
 
-    <!-- 主体布局：1:4比例 -->
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
-            <a href="reading.html" class="nav-btn">Reading笔记</a>
-            <a href="portfolio.html" class="nav-btn">Personal作品集</a>
-            <a href="topic.html" class="nav-btn">话题/疑问</a>
+            <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
+            <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
+            <div class="nav-btn" onclick="showContent('topic')">话题/疑问</div>
         </div>
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
-                <p>🔍 <strong>搜索</strong>：搜索笔记、作品或话题，找到你关注的内容</p>
-                <p>📌 <strong>筛选</strong>：按发布时间、内容类型筛选</p>
+                <p>🔍 <strong>搜索</strong>：搜索笔记标题或者内容、书籍名称或关键词</p>
+                <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、书籍类型、感悟主题筛选</p>
             </div>
             <div class="content-display">
-                请点击左侧导航栏，查看对应的笔记/作品集/话题内容
+                <div id="reading" class="content-section active">
+                  <h2>Reading笔记</h2>
+                  <h3>页面引言</h3>
+                  <p>文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
+                  <h3>功能区域</h3>
+                  <p>🔍 <strong>搜索</strong>：搜索笔记标题或者内容、书籍名称或关键词</p>
+                  <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、书籍类型、感悟主题筛选</p>
+                  <h3>笔记内容展示区</h3>
+                  <p>📚 暂未上传阅读笔记，敬请期待</p>
+                  <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
+                  <hr>
+                  <p>板块标签：阅读感悟 | 碎片思考</p>
+                </div>
+                <div id="portfolio" class="content-section">
+                  <h2>Personal作品集</h2>
+                  <h3>页面引言</h3>
+                  <p>你仍然应该以公开写作为主。</p>
+                  <h3>功能区域</h3>
+                  <p>🔍 <strong>搜索</strong>：搜索作品标题或内容、关键词或创作类型</p>
+                  <p>📌 <strong>筛选</strong>：按创作时间（最新/最早）、作品类型、核心主题筛选</p>
+                  <h3>作品内容展示区</h3>
+                  <p>🔥 暂未上传个人作品，敬请期待</p>
+                  <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
+                  <hr>
+                  <p>板块标签：深度创作 | 精品内容</p>
+                </div>
+                <div id="topic" class="content-section">
+                  <h2>话题/疑问</h2>
+                  <h3>页面引言</h3>
+                  <p>要么消散，要么解决。</p>
+                  <h3>功能区域</h3>
+                  <p>🔍 <strong>搜索</strong>：搜索话题关键词、疑问内容</p>
+                  <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、评论热度筛选</p>
+                  <h3>话题内容展示区</h3>
+                  <p>❓ 暂未发布话题/疑问，敬请期待</p>
+                  <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
+                  <hr>
+                  <p>板块标签：观点碰撞 | 疑问探讨</p>
+                </div>
             </div>
         </div>
     </div>
 
     <a href="index.html" class="back-btn">返回首页</a>
+
+    <script>
+        function showContent(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
