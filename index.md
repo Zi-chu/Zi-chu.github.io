@@ -3,83 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专注空间 - Energy station</title>
+    <title>Zi-chu - 专注空间</title>
     <style>
-        /* 全局样式重置 */
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-
-        /* 页面主体样式 */
-        body {
-            background-color: #f5f5f5;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* 标题样式 */
-        h1 {
-            color: #333;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
             text-align: center;
+            font-family: system-ui;
         }
-
-        /* 按钮容器 */
-        .button-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+        .line1 {
+            font-size: 48px;
+            color: #0066cc;
+            margin: 0 0 20px 0;
         }
-
-        /* 功能按钮样式 */
-        .func-btn {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+        .line2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0 0 30px 0;
+        }
+        .line3 {
+            font-size: 18px;
+            color: #999;
+            margin: 0 0 50px 0;
+        }
+        .enter-btn {
+            padding: 10px 30px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
             border: none;
-            border-radius: 8px;
-            background-color: #409eff;
-            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .func-btn:hover {
-            background-color: #66b1ff;
-            transform: scale(1.05);
-        }
-
-        .func-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* 响应式适配 */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .func-btn {
-                padding: 12px 24px;
-                font-size: 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <h1>Zi-chu</h1>
-    <div class="button-container">
-        <button class="func-btn" onclick="alert('专注模式已开启！')">专注模式</button>
-        <button class="func-btn" onclick="alert('休息模式已开启！')">休息模式</button>
-        <button class="func-btn" onclick="alert('音乐模式已开启！')">音乐模式</button>
-    </div>
+    <div class="line1">Zi-chu</div>
+    <div class="line2">「专注空间」- Energy station</div>
+    <div class="line3">——一切始于你。如果你不在乎，又有谁会在乎？——</div>
+    <a href="content.html" class="enter-btn">点击进入</a>
 </body>
 </html>
+
 
