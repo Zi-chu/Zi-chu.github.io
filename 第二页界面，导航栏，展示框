@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最佳沉浸式Daily time - Zi-chu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui; /* 稳定的默认字体 */
+        }
+        body {
+            background-color: #fff;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #333;
+        }
+        /* 置顶标题：调整为下方句子的1.5倍（14px×1.5=21px）+ 紧凑间距 */
+        .top-title {
+            font-size: 21px; /* 下方句子14px → 14×1.5=21px */
+            margin-bottom: 8px; /* 紧凑间距不变 */
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px; /* 内边距不变 */
+            font-weight: bold;
+        }
+        /* 顶部描述文字：紧凑间距，字号14px不变 */
+        .top-desc {
+            margin-bottom: 15px; /* 紧凑间距不变 */
+            font-size: 14px; /* 基准字号，标题为其1.5倍 */
+        }
+        /* 顶部与下方内容的分隔横线（同标题下横线样式） */
+        .top-divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin-bottom: 20px; /* 横线与下方内容间距 */
+        }
+        /* 主体布局：左侧1份 + 右侧4份 */
+        .main-layout {
+            display: flex;
+            gap: 30px; /* 左右间距不变 */
+        }
+        /* 左侧核心板块入口（1/5） */
+        .nav-sidebar {
+            width: calc(100% / 5); /* 1:4比例不变 */
+            flex-shrink: 0; /* 固定比例不挤压 */
+        }
+        /* 导航标题缩小 */
+        .nav-title {
+            font-size: 14px; /* 保持不变 */
+            margin-bottom: 12px;
+            font-weight: bold;
+            color: #444;
+        }
+        /* 导航按钮：统一为首页样式 + 内容完整展示 */
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 15px; /* 微调内边距，适配内容完整展示 */
+            margin-bottom: 8px;
+            background-color: #333; /* 同首页按钮黑色背景 */
+            color: #fff; /* 同首页按钮白色文字 */
+            text-decoration: none;
+            font-size: 14px; /* 同首页按钮字号 */
+            text-align: center; /* 同首页按钮居中 */
+            cursor: pointer;
+            border: none; /* 去掉原边框 */
+            border-radius: 0; /* 去掉原圆角，同首页按钮 */
+            transition: background-color 0.2s;
+            /* 移除省略号，确保内容完整展示 */
+            white-space: normal; /* 取消强制不换行 */
+            overflow: visible; /* 取消溢出隐藏 */
+            text-overflow: clip; /* 取消省略号 */
+            line-height: 1.4; /* 适配可能的换行，保证垂直居中 */
+            height: auto; /* 取消固定高度，自适应内容 */
+        }
+        .nav-btn:hover {
+            background-color: #555; /* 悬浮略浅，提升交互 */
+        }
+        /* 右侧展示区（4/5） */
+        .right-area {
+            width: calc(400% / 5); /* 1:4比例不变 */
+        }
+        /* 通用功能区域样式不变 */
+        .function-area {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .function-area-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        /* 右侧展示框样式不变 */
+        .content-display {
+            width: 100%;
+            min-height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 20px;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #666;
+        }
+        /* 返回按钮样式不变 */
+        .back-btn {
+            margin-top: 30px;
+            padding: 8px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题区：紧凑布局 + 新增类名 -->
+    <div class="top-title">最佳沉浸式Daily time</div>
+    <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你更大的东西，成为一群痴迷者的一部分。</p>
+    <!-- 顶部与下方内容的分隔横线 -->
+    <hr class="top-divider">
+
+    <!-- 主体布局：1:4比例 -->
+    <div class="main-layout">
+        <div class="nav-sidebar">
+            <div class="nav-title">核心板块入口</div>
+            <a href="reading.html" class="nav-btn">Reading笔记</a>
+            <a href="portfolio.html" class="nav-btn">Personal作品集</a>
+            <a href="topic.html" class="nav-btn">话题/疑问</a>
+        </div>
+        <div class="right-area">
+            <div class="function-area">
+                <div class="function-area-title">通用功能区域</div>
+                <p>🔍 <strong>搜索</strong>：搜索笔记、作品或话题，找到你关注的内容</p>
+                <p>📌 <strong>筛选</strong>：按发布时间、内容类型筛选</p>
+            </div>
+            <div class="content-display">
+                请点击左侧导航栏，查看对应的笔记/作品集/话题内容
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">返回首页</a>
+</body>
+</html>
