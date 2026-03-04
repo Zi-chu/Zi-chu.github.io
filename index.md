@@ -51,9 +51,9 @@
     </style>
 </head>
 <body>
-    <div class="line1">Zi-chu</div>
     <div class="line2">「专注空间」- Energy station</div>
     <div class="line3">——一切始于你。如果你不在乎，又有谁会在乎？——</div>
     <a href="content.html" class="enter-btn">点击进入</a>
 </body>
 </html>
+
