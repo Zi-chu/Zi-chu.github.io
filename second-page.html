@@ -87,7 +87,7 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-        /* 搜索/筛选样式优化 */
+        /* 搜索/筛选样式优化 - 位置保持不变 */
         .search-filter-item {
             display: inline-flex;
             align-items: center;
@@ -509,15 +509,15 @@
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
-            <div class="nav-btn" onclick="showContent('dialog')">高质量深入对话区</div>
-            <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
-            <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
-            <div class="nav-btn" onclick="showContent('topic')">话题/疑问</div>
+            <div class="nav-btn" onclick="showContent('dialog', this)">高质量深入对话区</div>
+            <div class="nav-btn active" onclick="showContent('reading', this)">Reading笔记</div>
+            <div class="nav-btn" onclick="showContent('portfolio', this)">Personal作品集</div>
+            <div class="nav-btn" onclick="showContent('topic', this)">话题/疑问</div>
         </div>
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
-                <!-- 搜索和筛选按钮 -->
+                <!-- 搜索和筛选按钮 - 位置保持不变 -->
                 <div class="search-filter-item" onclick="openResultModal('search')">
                     <span class="search-filter-icon search-icon"></span>
                     <span class="search-filter-text">搜索：搜索笔记标题或者内容、书籍名称或关键词</span>
@@ -706,6 +706,17 @@
         };
         let currentFontSize = 18; // 默认字体大小
 
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从本地存储加载数据
+            loadFromLocalStorage();
+            
+            // 检查空状态
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
+                checkEmptyState(sectionId);
+            });
+        });
+
         // 获取文件图标
         function getFileIcon(fileName) {
             const ext = fileName.split('.').pop().toLowerCase();
@@ -800,7 +811,7 @@
                     fileItem.className = 'uploaded-file-item';
                     fileItem.dataset.id = item.id;
                     fileItem.innerHTML = `
-                        <span>${getFileIcon(item.fileName)} ${item.fileName} (${(item.fileSize/1024/1024).toFixed(2)}MB)</span>
+                        <span>${getFileIcon(item.fileName)} ${fileName} (${(item.fileSize/1024/1024).toFixed(2)}MB)</span>
                         <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
                     `;
                     fileListContainer.appendChild(fileItem);
@@ -823,14 +834,18 @@
             return newCard;
         }
 
-        // 1. 切换内容区域
-        function showContent(sectionId) {
+        // 1. 切换内容区域 - 修复event对象问题
+        function showContent(sectionId, element) {
+            // 移除所有active类
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // 添加active类
             document.getElementById(sectionId).classList.add('active');
-            if (event && event.target) {
-                event.target.classList.add('active');
+            if (element) {
+                element.classList.add('active');
             }
+            
             closeFullscreenModal();
             checkEmptyState(sectionId);
         }
@@ -962,7 +977,8 @@
                 filterArea.style.display = 'none';
                 // 聚焦搜索框
                 setTimeout(() => {
-                    document.getElementById('globalSearchInput').focus();
+                    const searchInput = document.getElementById('globalSearchInput');
+                    if (searchInput) searchInput.focus();
                 }, 100);
             } else {
                 modalTitle.textContent = '内容筛选';
@@ -990,7 +1006,10 @@
 
         // 9. 执行全局搜索
         function executeGlobalSearch() {
-            const keyword = document.getElementById('globalSearchInput').value.trim();
+            const keywordInput = document.getElementById('globalSearchInput');
+            if (!keywordInput) return;
+            
+            const keyword = keywordInput.value.trim();
             if (!keyword) {
                 alert('请输入搜索关键词！');
                 return;
@@ -1041,13 +1060,14 @@
 
         // 10. 执行全局筛选
         function executeGlobalFilter() {
-            const sortType = document.querySelector('input[name="sort"]:checked').value;
+            const sortRadio = document.querySelector('input[name="sort"]:checked');
+            const sortType = sortRadio ? sortRadio.value : 'newest';
             const filterTypes = [];
             
-            if (document.getElementById('filter-reading').checked) filterTypes.push('reading');
-            if (document.getElementById('filter-portfolio').checked) filterTypes.push('portfolio');
-            if (document.getElementById('filter-topic').checked) filterTypes.push('topic');
-            if (document.getElementById('filter-dialog').checked) filterTypes.push('dialog');
+            if (document.getElementById('filter-reading')?.checked) filterTypes.push('reading');
+            if (document.getElementById('filter-portfolio')?.checked) filterTypes.push('portfolio');
+            if (document.getElementById('filter-topic')?.checked) filterTypes.push('topic');
+            if (document.getElementById('filter-dialog')?.checked) filterTypes.push('dialog');
             
             // 保存筛选状态
             saveFilterState();
@@ -1097,11 +1117,14 @@
 
         // 11. 处理文件上传（支持多文件、进度条）
         function handleFileUpload(input, sectionId) {
-            const files = input.files;
-            if (files.length === 0) return;
+            if (!input || !input.files || input.files.length === 0) return;
             
+            const files = input.files;
             const progressContainer = document.getElementById(`${sectionId}-progress`);
             const progressBar = document.getElementById(`${sectionId}-progress-bar`);
+            
+            if (!progressContainer || !progressBar) return;
+            
             progressContainer.style.display = 'block';
             progressBar.style.width = '0%';
             
@@ -1132,6 +1155,9 @@
                     const fileListContainer = document.getElementById(`${sectionId}-files`);
                     const contentContainer = document.getElementById(sectionId);
                     const emptyTip = document.getElementById(`${sectionId}-empty`);
+                    
+                    if (!fileListContainer || !contentContainer || !emptyTip) return;
+                    
                     emptyTip.style.display = 'none';
                     
                     // 生成唯一ID
@@ -1241,23 +1267,12 @@
         });
 
         // 点击遮罩层关闭弹窗
-        document.getElementById('resultModal').addEventListener('click', function(e) {
+        document.getElementById('resultModal')?.addEventListener('click', function(e) {
             if (e.target === this) closeResultModal();
         });
-        document.getElementById('fullscreenModal').addEventListener('click', function(e) {
+        document.getElementById('fullscreenModal')?.addEventListener('click', function(e) {
             if (e.target === this) closeFullscreenModal();
         });
-
-        // 初始化
-        window.onload = function() {
-            // 从本地存储加载数据
-            loadFromLocalStorage();
-            
-            // 检查空状态
-            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                checkEmptyState(sectionId);
-            });
-        };
     </script>
 </body>
 </html>
