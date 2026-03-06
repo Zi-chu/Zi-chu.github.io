@@ -87,7 +87,7 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-        /* 搜索/筛选样式优化 - 位置保持不变 */
+        /* 搜索/筛选样式优化 */
         .search-filter-item {
             display: inline-flex;
             align-items: center;
@@ -180,21 +180,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
-            position: relative;
-        }
-        /* 加载动画样式 */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            border-top-color: #0066cc;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
         /* 筛选选项区 */
         .filter-options {
@@ -232,15 +217,10 @@
             margin-bottom: 8px;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            transition: background-color 0.2s;
         }
         .result-item:hover {
             background-color: #f0f7ff;
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
-            transform: translateY(-2px);
         }
         /* 文件上传样式 */
         .upload-container {
@@ -288,9 +268,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         /* 通用样式 */
         .content-display {
@@ -340,18 +317,13 @@
             margin: 10px 0;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .item-card:hover {
             background-color: #f0f7ff;
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
-            transform: translateY(-2px);
         }
         .delete-btn {
             background: #ff4444;
@@ -390,19 +362,6 @@
             line-height: 2.2;
             overflow-y: auto;
         }
-        .font-size-controls {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-        }
-        .font-size-btn {
-            padding: 5px 10px;
-            background: #0066cc;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
         .progress-container {
             width: 100%;
             height: 10px;
@@ -429,75 +388,10 @@
         .back-btn:hover {
             background-color: #555;
         }
-        /* 美化空状态 */
         .empty-tip {
             display: none;
-            margin: 40px 0;
-            color: #666;
-            text-align: center;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-        .empty-tip::before {
-            content: attr(data-icon);
-            font-size: 40px;
-            display: block;
-            margin-bottom: 10px;
-        }
-        /* 上传进度条 */
-        .upload-progress {
-            width: 100%;
-            height: 8px;
-            background: #eee;
-            border-radius: 4px;
             margin: 10px 0;
-            display: none;
-        }
-        .upload-progress-bar {
-            height: 100%;
-            background: #0066cc;
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.3s;
-        }
-        /* 响应式适配 */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-            .main-layout {
-                flex-direction: column; /* 移动端改为上下布局 */
-                gap: 20px;
-            }
-            .nav-sidebar {
-                width: 100%; /* 侧边栏占满宽度 */
-            }
-            .nav-btn {
-                display: inline-block; /* 按钮横向排列 */
-                width: calc(25% - 8px);
-                margin: 0 4px 8px;
-            }
-            .result-modal {
-                padding: 20px 10px; /* 弹窗适配小屏幕 */
-            }
-            .fullscreen-content {
-                padding: 20px; /* 全屏阅读区减少内边距 */
-                font-size: 16px;
-                line-height: 2;
-            }
-            .item-card {
-                white-space: normal;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .uploaded-file-item {
-                white-space: normal;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
+            color: #666;
         }
     </style>
 </head>
@@ -509,15 +403,15 @@
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
-            <div class="nav-btn" onclick="showContent('dialog', this)">高质量深入对话区</div>
-            <div class="nav-btn active" onclick="showContent('reading', this)">Reading笔记</div>
-            <div class="nav-btn" onclick="showContent('portfolio', this)">Personal作品集</div>
-            <div class="nav-btn" onclick="showContent('topic', this)">话题/疑问</div>
+            <div class="nav-btn" onclick="showContent('dialog')">高质量深入对话区</div>
+            <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
+            <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
+            <div class="nav-btn" onclick="showContent('topic')">话题/疑问</div>
         </div>
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
-                <!-- 搜索和筛选按钮 - 位置保持不变 -->
+                <!-- 搜索和筛选按钮 -->
                 <div class="search-filter-item" onclick="openResultModal('search')">
                     <span class="search-filter-icon search-icon"></span>
                     <span class="search-filter-text">搜索：搜索笔记标题或者内容、书籍名称或关键词</span>
@@ -533,7 +427,16 @@
                     <h2>Reading笔记</h2>
                     <p class="intro-text">文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
                     <h3>笔记内容展示区</h3>
-                    <p id="reading-empty" class="empty-tip" data-icon="📚">暂未上传阅读笔记，点击下方按钮上传你的第一篇笔记吧～</p>
+                    <!-- 示例笔记 -->
+                    <div class="item-card" onclick="openFullscreenModal('reading', this)">
+                        《活着》阅读笔记 - 第一章
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <div class="item-card" onclick="openFullscreenModal('reading', this)">
+                        《百年孤独》核心感悟
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <p id="reading-empty" class="empty-tip">📚 暂未上传阅读笔记，敬请期待</p>
                     <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
                     <hr>
                     <p>板块标签：阅读感悟 | 碎片思考</p>
@@ -541,12 +444,9 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传阅读笔记文件
-                        <input type="file" class="upload-input" id="reading-upload" onchange="handleFileUpload(this, 'reading')" multiple>
+                        <input type="file" class="upload-input" id="reading-upload" onchange="handleFileUpload(this, 'reading')">
                     </label>
-                    <div class="upload-progress" id="reading-progress">
-                        <div class="upload-progress-bar" id="reading-progress-bar"></div>
-                    </div>
-                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制（超大文件可能卡顿）</p>
+                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <!-- 上传文件列表 -->
                     <div id="reading-files" class="uploaded-files"></div>
                 </div>
@@ -556,7 +456,15 @@
                     <h2>Personal作品集</h2>
                     <p class="intro-text">你仍然应该以公开写作为主。</p>
                     <h3>作品内容展示区</h3>
-                    <p id="portfolio-empty" class="empty-tip" data-icon="🔥">暂未上传个人作品，点击下方按钮上传你的第一篇作品吧～</p>
+                    <div class="item-card" onclick="openFullscreenModal('portfolio', this)">
+                        2026年度总结 - 个人成长
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <div class="item-card" onclick="openFullscreenModal('portfolio', this)">
+                        前端开发实战 - 项目复盘
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <p id="portfolio-empty" class="empty-tip">🔥 暂未上传个人作品，敬请期待</p>
                     <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
                     <hr>
                     <p>板块标签：深度创作 | 精品内容</p>
@@ -564,12 +472,9 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传作品集文件
-                        <input type="file" class="upload-input" id="portfolio-upload" onchange="handleFileUpload(this, 'portfolio')" multiple>
+                        <input type="file" class="upload-input" id="portfolio-upload" onchange="handleFileUpload(this, 'portfolio')">
                     </label>
-                    <div class="upload-progress" id="portfolio-progress">
-                        <div class="upload-progress-bar" id="portfolio-progress-bar"></div>
-                    </div>
-                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制（超大文件可能卡顿）</p>
+                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="portfolio-files" class="uploaded-files"></div>
                 </div>
 
@@ -578,7 +483,15 @@
                     <h2>话题/疑问</h2>
                     <p class="intro-text">要么消散，要么解决。</p>
                     <h3>话题内容展示区</h3>
-                    <p id="topic-empty" class="empty-tip" data-icon="❓">暂未发布话题/疑问，点击下方按钮上传你的第一个话题吧～</p>
+                    <div class="item-card" onclick="openFullscreenModal('topic', this)">
+                        如何提升阅读效率？
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <div class="item-card" onclick="openFullscreenModal('topic', this)">
+                        前端性能优化的核心思路
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <p id="topic-empty" class="empty-tip">❓ 暂未发布话题/疑问，敬请期待</p>
                     <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
                     <hr>
                     <p>板块标签：观点碰撞 | 疑问探讨</p>
@@ -586,12 +499,9 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传话题/疑问文件
-                        <input type="file" class="upload-input" id="topic-upload" onchange="handleFileUpload(this, 'topic')" multiple>
+                        <input type="file" class="upload-input" id="topic-upload" onchange="handleFileUpload(this, 'topic')">
                     </label>
-                    <div class="upload-progress" id="topic-progress">
-                        <div class="upload-progress-bar" id="topic-progress-bar"></div>
-                    </div>
-                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制（超大文件可能卡顿）</p>
+                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="topic-files" class="uploaded-files"></div>
                 </div>
 
@@ -599,17 +509,22 @@
                 <div id="dialog" class="content-section">
                     <h2>高质量深入对话区</h2>
                     <h3>已上传书籍列表</h3>
-                    <p id="dialog-empty" class="empty-tip" data-icon="📚">暂未上传书籍，点击下方按钮上传你的第一本书吧～</p>
+                    <div class="item-card" onclick="openFullscreenModal('dialog', this)">
+                        《活着》- 余华（全本）
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <div class="item-card" onclick="openFullscreenModal('dialog', this)">
+                        《思考，快与慢》- 卡尼曼
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    </div>
+                    <p id="dialog-empty" class="empty-tip">📚 暂未上传书籍，敬请期待</p>
                     
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传书籍文件
-                        <input type="file" class="upload-input" id="dialog-upload" onchange="handleFileUpload(this, 'dialog')" multiple>
+                        <input type="file" class="upload-input" id="dialog-upload" onchange="handleFileUpload(this, 'dialog')">
                     </label>
-                    <div class="upload-progress" id="dialog-progress">
-                        <div class="upload-progress-bar" id="dialog-progress-bar"></div>
-                    </div>
-                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制（超大文件可能卡顿）</p>
+                    <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="dialog-files" class="uploaded-files"></div>
                 </div>
             </div>
@@ -686,10 +601,6 @@
     <div id="fullscreenModal" class="fullscreen-modal">
         <div class="fullscreen-content">
             <button class="close-modal-btn" style="float: right; margin-bottom: 20px;" onclick="closeFullscreenModal()">关闭</button>
-            <div class="font-size-controls">
-                <button class="font-size-btn" onclick="changeFontSize(-1)">🔍 缩小字体</button>
-                <button class="font-size-btn" onclick="changeFontSize(1)">🔍 放大字体</button>
-            </div>
             <div id="fullscreen-content-inner"></div>
         </div>
     </div>
@@ -697,155 +608,34 @@
     <a href="index.html" class="back-btn">返回首页</a>
 
     <script>
-        // 存储所有内容数据（带唯一ID）
-        let contentData = {
-            reading: [],
-            portfolio: [],
-            topic: [],
-            dialog: []
+        // 存储所有内容数据
+        const contentData = {
+            reading: [
+                { title: "《活着》阅读笔记 - 第一章", type: "reading" },
+                { title: "《百年孤独》核心感悟", type: "reading" }
+            ],
+            portfolio: [
+                { title: "2026年度总结 - 个人成长", type: "portfolio" },
+                { title: "前端开发实战 - 项目复盘", type: "portfolio" }
+            ],
+            topic: [
+                { title: "如何提升阅读效率？", type: "topic" },
+                { title: "前端性能优化的核心思路", type: "topic" }
+            ],
+            dialog: [
+                { title: "《活着》- 余华（全本）", type: "dialog" },
+                { title: "《思考，快与慢》- 卡尼曼", type: "dialog" }
+            ]
         };
-        let currentFontSize = 18; // 默认字体大小
 
-        // DOM加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 从本地存储加载数据
-            loadFromLocalStorage();
-            
-            // 检查空状态
-            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                checkEmptyState(sectionId);
-            });
-        });
-
-        // 获取文件图标
-        function getFileIcon(fileName) {
-            const ext = fileName.split('.').pop().toLowerCase();
-            const icons = {
-                txt: '📝', md: '📄', pdf: '📑',
-                doc: '📃', docx: '📃', xls: '📊', xlsx: '📊',
-                png: '🖼️', jpg: '🖼️', jpeg: '🖼️', gif: '🖼️',
-                mp4: '🎬', mp3: '🎵', wav: '🎵',
-                zip: '🗜️', rar: '🗜️', 7z: '🗜️',
-                html: '🌐', js: '🔧', css: '🎨',
-                default: '📁'
-            };
-            return icons[ext] || icons.default;
-        }
-
-        // 生成唯一ID
-        function generateId() {
-            return Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-        }
-
-        // 保存数据到本地存储
-        function saveContentData() {
-            localStorage.setItem('contentData', JSON.stringify(contentData));
-        }
-
-        // 保存筛选状态
-        function saveFilterState() {
-            const sortType = document.querySelector('input[name="sort"]:checked')?.value || 'newest';
-            const filterTypes = [];
-            if (document.getElementById('filter-reading')?.checked) filterTypes.push('reading');
-            if (document.getElementById('filter-portfolio')?.checked) filterTypes.push('portfolio');
-            if (document.getElementById('filter-topic')?.checked) filterTypes.push('topic');
-            if (document.getElementById('filter-dialog')?.checked) filterTypes.push('dialog');
-            localStorage.setItem('filterState', JSON.stringify({sortType, filterTypes}));
-        }
-
-        // 从本地存储恢复数据
-        function loadFromLocalStorage() {
-            // 恢复内容数据
-            const savedData = JSON.parse(localStorage.getItem('contentData') || '{}');
-            if (savedData && Object.keys(savedData).length > 0) {
-                contentData = savedData;
-                // 重新渲染所有卡片
-                renderAllCards();
-            }
-
-            // 恢复筛选状态
-            const savedFilter = JSON.parse(localStorage.getItem('filterState') || '{}');
-            if (savedFilter.sortType) {
-                const sortRadio = document.getElementById(`sort-${savedFilter.sortType}`);
-                if (sortRadio) sortRadio.checked = true;
-            }
-            if (savedFilter.filterTypes && savedFilter.filterTypes.length > 0) {
-                savedFilter.filterTypes.forEach(type => {
-                    const checkbox = document.getElementById(`filter-${type}`);
-                    if (checkbox) checkbox.checked = true;
-                });
-            }
-        }
-
-        // 渲染所有卡片
-        function renderAllCards() {
-            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                const container = document.getElementById(sectionId);
-                const contentTitle = container.querySelector('h3');
-                // 清空现有卡片（保留空状态）
-                const existingCards = container.querySelectorAll('.item-card');
-                existingCards.forEach(card => card.remove());
-                
-                // 渲染新卡片
-                contentData[sectionId].forEach(item => {
-                    const newCard = createItemCard(item.id, item.title, sectionId);
-                    container.insertBefore(newCard, contentTitle.nextSibling);
-                });
-
-                // 渲染文件列表
-                renderFileList(sectionId);
-                
-                // 检查空状态
-                checkEmptyState(sectionId);
-            });
-        }
-
-        // 渲染文件列表
-        function renderFileList(sectionId) {
-            const fileListContainer = document.getElementById(`${sectionId}-files`);
-            fileListContainer.innerHTML = '';
-            
-            contentData[sectionId].forEach(item => {
-                if (item.fileName) {
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'uploaded-file-item';
-                    fileItem.dataset.id = item.id;
-                    fileItem.innerHTML = `
-                        <span>${getFileIcon(item.fileName)} ${fileName} (${(item.fileSize/1024/1024).toFixed(2)}MB)</span>
-                        <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
-                    `;
-                    fileListContainer.appendChild(fileItem);
-                }
-            });
-        }
-
-        // 创建内容卡片
-        function createItemCard(id, title, sectionId) {
-            const newCard = document.createElement('div');
-            newCard.className = 'item-card';
-            newCard.dataset.id = id;
-            newCard.onclick = function() { openFullscreenModal(sectionId, this); };
-            // 过滤危险字符
-            const safeTitle = title.replace(/[<>]/g, '');
-            newCard.innerHTML = `
-                ${safeTitle}
-                <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-            `;
-            return newCard;
-        }
-
-        // 1. 切换内容区域 - 修复event对象问题
-        function showContent(sectionId, element) {
-            // 移除所有active类
+        // 1. 切换内容区域
+        function showContent(sectionId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            // 添加active类
             document.getElementById(sectionId).classList.add('active');
-            if (element) {
-                element.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
             }
-            
             closeFullscreenModal();
             checkEmptyState(sectionId);
         }
@@ -855,21 +645,11 @@
             if (confirm('确定要删除该条目吗？')) {
                 const itemCard = btn.parentElement;
                 const sectionId = itemCard.closest('.content-section').id;
-                const itemId = itemCard.dataset.id;
-                
                 // 从数据中删除
-                contentData[sectionId] = contentData[sectionId].filter(item => item.id !== itemId);
+                const title = itemCard.firstChild.textContent.trim();
+                contentData[sectionId] = contentData[sectionId].filter(item => item.title !== title);
                 // 从DOM删除
                 itemCard.remove();
-                
-                // 删除对应的文件条目
-                const fileItems = document.querySelectorAll(`#${sectionId}-files .uploaded-file-item`);
-                fileItems.forEach(item => {
-                    if (item.dataset.id === itemId) item.remove();
-                });
-                
-                // 保存数据
-                saveContentData();
                 checkEmptyState(sectionId);
             }
         }
@@ -886,13 +666,12 @@
             const modal = document.getElementById('fullscreenModal');
             const contentInner = document.getElementById('fullscreen-content-inner');
             const title = element ? element.firstChild.textContent.trim() : '';
-            const safeTitle = title.replace(/[<>]/g, '');
             
             let content = '';
             switch(type) {
                 case 'reading':
                     content = `
-                        <h2>${safeTitle}</h2>
+                        <h2>${title}</h2>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 30%;"></div>
                         </div>
@@ -904,7 +683,7 @@
                     break;
                 case 'portfolio':
                     content = `
-                        <h2>${safeTitle}</h2>
+                        <h2>${title}</h2>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 100%;"></div>
                         </div>
@@ -918,7 +697,7 @@
                     break;
                 case 'topic':
                     content = `
-                        <h2>${safeTitle}</h2>
+                        <h2>${title}</h2>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 70%;"></div>
                         </div>
@@ -935,7 +714,7 @@
                     break;
                 case 'dialog':
                     content = `
-                        <h2>${safeTitle}</h2>
+                        <h2>${title}</h2>
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 30%;"></div>
                         </div>
@@ -949,14 +728,7 @@
             }
             
             contentInner.innerHTML = content;
-            contentInner.style.fontSize = `${currentFontSize}px`;
             modal.style.display = 'block';
-        }
-
-        // 调整字体大小
-        function changeFontSize(step) {
-            currentFontSize = Math.max(14, Math.min(24, currentFontSize + step));
-            document.getElementById('fullscreen-content-inner').style.fontSize = `${currentFontSize}px`;
         }
 
         // 5. 关闭全屏阅读
@@ -975,11 +747,6 @@
                 modalTitle.textContent = '全局搜索';
                 searchArea.style.display = 'block';
                 filterArea.style.display = 'none';
-                // 聚焦搜索框
-                setTimeout(() => {
-                    const searchInput = document.getElementById('globalSearchInput');
-                    if (searchInput) searchInput.focus();
-                }, 100);
             } else {
                 modalTitle.textContent = '内容筛选';
                 searchArea.style.display = 'none';
@@ -1006,10 +773,7 @@
 
         // 9. 执行全局搜索
         function executeGlobalSearch() {
-            const keywordInput = document.getElementById('globalSearchInput');
-            if (!keywordInput) return;
-            
-            const keyword = keywordInput.value.trim();
+            const keyword = document.getElementById('globalSearchInput').value.trim();
             if (!keyword) {
                 alert('请输入搜索关键词！');
                 return;
@@ -1028,12 +792,7 @@
                     results.forEach(item => {
                         const resultItem = document.createElement('div');
                         resultItem.className = 'result-item';
-                        // 关键词高亮
-                        const highlightedTitle = item.title.replace(
-                            new RegExp(keyword, 'gi'), 
-                            match => `<span style="background: #ffeb3b;">${match}</span>`
-                        );
-                        resultItem.innerHTML = highlightedTitle;
+                        resultItem.textContent = item.title;
                         resultItem.onclick = function() {
                             // 切换到对应板块并打开详情
                             showContent(type);
@@ -1041,7 +800,7 @@
                             // 找到对应条目并打开全屏阅读
                             const itemCards = document.querySelectorAll(`#${type} .item-card`);
                             itemCards.forEach(card => {
-                                if (card.dataset.id === item.id) {
+                                if (card.firstChild.textContent.trim() === item.title) {
                                     openFullscreenModal(type, card);
                                 }
                             });
@@ -1060,17 +819,13 @@
 
         // 10. 执行全局筛选
         function executeGlobalFilter() {
-            const sortRadio = document.querySelector('input[name="sort"]:checked');
-            const sortType = sortRadio ? sortRadio.value : 'newest';
+            const sortType = document.querySelector('input[name="sort"]:checked').value;
             const filterTypes = [];
             
-            if (document.getElementById('filter-reading')?.checked) filterTypes.push('reading');
-            if (document.getElementById('filter-portfolio')?.checked) filterTypes.push('portfolio');
-            if (document.getElementById('filter-topic')?.checked) filterTypes.push('topic');
-            if (document.getElementById('filter-dialog')?.checked) filterTypes.push('dialog');
-            
-            // 保存筛选状态
-            saveFilterState();
+            if (document.getElementById('filter-reading').checked) filterTypes.push('reading');
+            if (document.getElementById('filter-portfolio').checked) filterTypes.push('portfolio');
+            if (document.getElementById('filter-topic').checked) filterTypes.push('topic');
+            if (document.getElementById('filter-dialog').checked) filterTypes.push('dialog');
             
             clearSearchResults();
             
@@ -1078,12 +833,10 @@
             const typesToShow = filterTypes.length > 0 ? filterTypes : Object.keys(contentData);
             
             typesToShow.forEach(type => {
-                let items = [...contentData[type]];
-                // 按时间排序（模拟，按ID倒序/正序）
+                const items = [...contentData[type]];
+                // 按时间排序（模拟）
                 if (sortType === 'oldest') {
-                    items = items.sort((a, b) => a.id.localeCompare(b.id));
-                } else {
-                    items = items.sort((a, b) => b.id.localeCompare(a.id));
+                    items.reverse();
                 }
                 
                 const resultContainer = document.getElementById(`${type}-results`);
@@ -1097,7 +850,7 @@
                             closeResultModal();
                             const itemCards = document.querySelectorAll(`#${type} .item-card`);
                             itemCards.forEach(card => {
-                                if (card.dataset.id === item.id) {
+                                if (card.firstChild.textContent.trim() === item.title) {
                                     openFullscreenModal(type, card);
                                 }
                             });
@@ -1115,164 +868,80 @@
             }).join('、') : '所有类型'}内容`);
         }
 
-        // 11. 处理文件上传（支持多文件、进度条）
+        // 11. 处理文件上传（移除大小限制）
         function handleFileUpload(input, sectionId) {
-            if (!input || !input.files || input.files.length === 0) return;
-            
             const files = input.files;
-            const progressContainer = document.getElementById(`${sectionId}-progress`);
-            const progressBar = document.getElementById(`${sectionId}-progress-bar`);
+            if (files.length === 0) return;
             
-            if (!progressContainer || !progressBar) return;
+            const file = files[0];
+            const fileListContainer = document.getElementById(`${sectionId}-files`);
             
-            progressContainer.style.display = 'block';
-            progressBar.style.width = '0%';
+            // 创建文件条目
+            const fileItem = document.createElement('div');
+            fileItem.className = 'uploaded-file-item';
+            fileItem.innerHTML = `
+                <span>${file.name} (${(file.size/1024/1024).toFixed(2)}MB)</span>
+                <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
+            `;
             
-            const totalFiles = files.length;
-            let uploadedFiles = 0;
+            fileListContainer.appendChild(fileItem);
             
-            // 循环处理多个文件
-            Array.from(files).forEach(file => {
-                // 超大文件提示
-                if (file.size > 1024 * 1024 * 100) { // 100MB
-                    if (!confirm(`文件 "${file.name}" 大小为${(file.size/1024/1024).toFixed(2)}MB，超大文件可能导致卡顿，是否继续上传？`)) {
-                        uploadedFiles++;
-                        updateProgress();
-                        return;
-                    }
-                }
-                
-                const reader = new FileReader();
-                // 上传进度
-                reader.onprogress = function(e) {
-                    if (e.lengthComputable) {
-                        const progress = (e.loaded / e.total) * 100;
-                        progressBar.style.width = `${progress}%`;
-                    }
-                };
-                
-                reader.onload = function() {
-                    const fileListContainer = document.getElementById(`${sectionId}-files`);
-                    const contentContainer = document.getElementById(sectionId);
-                    const emptyTip = document.getElementById(`${sectionId}-empty`);
-                    
-                    if (!fileListContainer || !contentContainer || !emptyTip) return;
-                    
-                    emptyTip.style.display = 'none';
-                    
-                    // 生成唯一ID
-                    const itemId = generateId();
-                    // 提取文件名（过滤危险字符）
-                    const fileName = file.name.replace(/[<>]/g, '');
-                    const title = fileName.split('.').slice(0, -1).join('.') || fileName;
-                    
-                    // 创建文件条目
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'uploaded-file-item';
-                    fileItem.dataset.id = itemId;
-                    fileItem.innerHTML = `
-                        <span>${getFileIcon(fileName)} ${fileName} (${(file.size/1024/1024).toFixed(2)}MB)</span>
-                        <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
-                    `;
-                    fileListContainer.appendChild(fileItem);
-                    
-                    // 创建内容卡片
-                    const newCard = createItemCard(itemId, title, sectionId);
-                    const contentTitle = contentContainer.querySelector('h3');
-                    contentContainer.insertBefore(newCard, contentTitle.nextSibling);
-                    
-                    // 添加到数据中
-                    contentData[sectionId].push({
-                        id: itemId,
-                        title: title,
-                        fileName: fileName,
-                        fileSize: file.size,
-                        uploadTime: new Date().toISOString(),
-                        type: sectionId
-                    });
-                    
-                    // 保存数据
-                    saveContentData();
-                    
-                    uploadedFiles++;
-                    updateProgress();
-                };
-                
-                reader.onerror = function() {
-                    alert(`文件 "${file.name}" 上传失败！`);
-                    uploadedFiles++;
-                    updateProgress();
-                };
-                
-                // 开始读取文件（模拟上传）
-                reader.readAsArrayBuffer(file);
-            });
+            // 创建内容卡片（模拟上传后的展示）
+            const contentContainer = document.getElementById(sectionId);
+            const emptyTip = document.getElementById(`${sectionId}-empty`);
+            emptyTip.style.display = 'none';
             
-            // 更新进度
-            function updateProgress() {
-                const overallProgress = (uploadedFiles / totalFiles) * 100;
-                progressBar.style.width = `${overallProgress}%`;
-                
-                if (uploadedFiles === totalFiles) {
-                    // 上传完成，隐藏进度条
-                    setTimeout(() => {
-                        progressContainer.style.display = 'none';
-                        progressBar.style.width = '0%';
-                    }, 1000);
-                    alert(`共上传${uploadedFiles}个文件，上传成功！`);
-                }
-            }
+            // 提取文件名作为标题
+            const fileName = file.name.split('.').slice(0, -1).join('.');
+            const newCard = document.createElement('div');
+            newCard.className = 'item-card';
+            newCard.onclick = function() { openFullscreenModal(sectionId, this); };
+            newCard.innerHTML = `
+                ${fileName}
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+            `;
+            
+            // 添加到内容区顶部
+            const contentTitle = contentContainer.querySelector('h3');
+            contentContainer.insertBefore(newCard, contentTitle.nextSibling);
+            
+            // 添加到数据中
+            contentData[sectionId].push({ title: fileName, type: sectionId });
             
             // 清空文件输入
             input.value = '';
+            
+            alert(`文件 "${file.name}" 上传成功！`);
         }
 
         // 12. 删除已上传的文件
         function deleteUploadedFile(btn, sectionId) {
             if (confirm('确定要删除该文件吗？')) {
                 const fileItem = btn.parentElement;
-                const itemId = fileItem.dataset.id;
+                const fileName = fileItem.firstChild.textContent.split(' (')[0];
                 fileItem.remove();
                 
                 // 删除对应的内容卡片
                 const itemCards = document.querySelectorAll(`#${sectionId} .item-card`);
                 itemCards.forEach(card => {
-                    if (card.dataset.id === itemId) {
+                    if (card.firstChild.textContent.trim() === fileName) {
                         card.remove();
                     }
                 });
                 
                 // 从数据中删除
-                contentData[sectionId] = contentData[sectionId].filter(item => item.id !== itemId);
-                
-                // 保存数据
-                saveContentData();
+                contentData[sectionId] = contentData[sectionId].filter(item => item.title !== fileName);
                 
                 checkEmptyState(sectionId);
             }
         }
 
-        // 快捷键支持
-        document.addEventListener('keydown', function(e) {
-            // ESC关闭所有弹窗
-            if (e.key === 'Escape') {
-                closeResultModal();
-                closeFullscreenModal();
-            }
-            // Ctrl+F打开搜索
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                openResultModal('search');
-            }
-        });
-
-        // 点击遮罩层关闭弹窗
-        document.getElementById('resultModal')?.addEventListener('click', function(e) {
-            if (e.target === this) closeResultModal();
-        });
-        document.getElementById('fullscreenModal')?.addEventListener('click', function(e) {
-            if (e.target === this) closeFullscreenModal();
-        });
+        // 初始化
+        window.onload = function() {
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
+                checkEmptyState(sectionId);
+            });
+        };
     </script>
 </body>
 </html>
