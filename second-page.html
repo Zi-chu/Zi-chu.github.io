@@ -393,6 +393,14 @@
             margin: 10px 0;
             color: #666;
         }
+        /* 新增：加载提示样式 */
+        .loading-tip {
+            color: #0066cc;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -403,20 +411,20 @@
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
-            <div class="nav-btn" onclick="showContent('dialog')">高质量深入对话区</div>
-            <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
-            <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
-            <div class="nav-btn" onclick="showContent('topic')">话题/疑问</div>
+            <div class="nav-btn" id="btn-dialog">高质量深入对话区</div>
+            <div class="nav-btn active" id="btn-reading">Reading笔记</div>
+            <div class="nav-btn" id="btn-portfolio">Personal作品集</div>
+            <div class="nav-btn" id="btn-topic">话题/疑问</div>
         </div>
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
                 <!-- 搜索和筛选按钮 -->
-                <div class="search-filter-item" onclick="openResultModal('search')">
+                <div class="search-filter-item" id="btn-search">
                     <span class="search-filter-icon search-icon"></span>
                     <span class="search-filter-text">搜索：搜索笔记标题或者内容、书籍名称或关键词</span>
                 </div>
-                <div class="search-filter-item" onclick="openResultModal('filter')">
+                <div class="search-filter-item" id="btn-filter">
                     <span class="search-filter-icon filter-icon"></span>
                     <span class="search-filter-text">筛选：按发布时间（最新/最早）、书籍类型、感悟主题筛选</span>
                 </div>
@@ -428,11 +436,11 @@
                     <p class="intro-text">文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
                     <h3>笔记内容展示区</h3>
                     <!-- 示例笔记 -->
-                    <div class="item-card" onclick="openFullscreenModal('reading', this)">
+                    <div class="item-card" data-title="《活着》阅读笔记 - 第一章">
                         《活着》阅读笔记 - 第一章
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
-                    <div class="item-card" onclick="openFullscreenModal('reading', this)">
+                    <div class="item-card" data-title="《百年孤独》核心感悟">
                         《百年孤独》核心感悟
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
@@ -444,7 +452,7 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传阅读笔记文件
-                        <input type="file" class="upload-input" id="reading-upload" onchange="handleFileUpload(this, 'reading')">
+                        <input type="file" class="upload-input" id="reading-upload" multiple>
                     </label>
                     <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <!-- 上传文件列表 -->
@@ -456,11 +464,11 @@
                     <h2>Personal作品集</h2>
                     <p class="intro-text">你仍然应该以公开写作为主。</p>
                     <h3>作品内容展示区</h3>
-                    <div class="item-card" onclick="openFullscreenModal('portfolio', this)">
+                    <div class="item-card" data-title="2026年度总结 - 个人成长">
                         2026年度总结 - 个人成长
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
-                    <div class="item-card" onclick="openFullscreenModal('portfolio', this)">
+                    <div class="item-card" data-title="前端开发实战 - 项目复盘">
                         前端开发实战 - 项目复盘
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
@@ -472,7 +480,7 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传作品集文件
-                        <input type="file" class="upload-input" id="portfolio-upload" onchange="handleFileUpload(this, 'portfolio')">
+                        <input type="file" class="upload-input" id="portfolio-upload" multiple>
                     </label>
                     <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="portfolio-files" class="uploaded-files"></div>
@@ -483,11 +491,11 @@
                     <h2>话题/疑问</h2>
                     <p class="intro-text">要么消散，要么解决。</p>
                     <h3>话题内容展示区</h3>
-                    <div class="item-card" onclick="openFullscreenModal('topic', this)">
+                    <div class="item-card" data-title="如何提升阅读效率？">
                         如何提升阅读效率？
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
-                    <div class="item-card" onclick="openFullscreenModal('topic', this)">
+                    <div class="item-card" data-title="前端性能优化的核心思路">
                         前端性能优化的核心思路
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
@@ -499,7 +507,7 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传话题/疑问文件
-                        <input type="file" class="upload-input" id="topic-upload" onchange="handleFileUpload(this, 'topic')">
+                        <input type="file" class="upload-input" id="topic-upload" multiple>
                     </label>
                     <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="topic-files" class="uploaded-files"></div>
@@ -509,11 +517,11 @@
                 <div id="dialog" class="content-section">
                     <h2>高质量深入对话区</h2>
                     <h3>已上传书籍列表</h3>
-                    <div class="item-card" onclick="openFullscreenModal('dialog', this)">
+                    <div class="item-card" data-title="《活着》- 余华（全本）">
                         《活着》- 余华（全本）
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
-                    <div class="item-card" onclick="openFullscreenModal('dialog', this)">
+                    <div class="item-card" data-title="《思考，快与慢》- 卡尼曼">
                         《思考，快与慢》- 卡尼曼
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
                     </div>
@@ -522,7 +530,7 @@
                     <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传书籍文件
-                        <input type="file" class="upload-input" id="dialog-upload" onchange="handleFileUpload(this, 'dialog')">
+                        <input type="file" class="upload-input" id="dialog-upload" multiple>
                     </label>
                     <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
                     <div id="dialog-files" class="uploaded-files"></div>
@@ -536,13 +544,14 @@
         <div class="result-modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">全局搜索</h2>
-                <button class="close-modal-btn" onclick="closeResultModal()">关闭</button>
+                <button class="close-modal-btn" id="btn-close-modal">关闭</button>
             </div>
             
             <!-- 搜索区域 -->
             <div id="searchArea" class="search-input-area">
                 <input type="text" id="globalSearchInput" class="search-input" placeholder="请输入搜索关键词（支持笔记、书籍、作品、话题）...">
-                <button class="search-btn" onclick="executeGlobalSearch()">开始搜索</button>
+                <button class="search-btn" id="btn-execute-search">开始搜索</button>
+                <div class="loading-tip" id="search-loading">正在搜索中...</div>
             </div>
             
             <!-- 筛选区域 -->
@@ -572,7 +581,7 @@
                     <input type="checkbox" id="filter-dialog" value="dialog">
                     <label for="filter-dialog">书籍</label>
                 </div>
-                <button class="search-btn" onclick="executeGlobalFilter()">应用筛选</button>
+                <button class="search-btn" id="btn-execute-filter">应用筛选</button>
             </div>
             
             <!-- 结果展示区 -->
@@ -600,7 +609,7 @@
     <!-- 全屏阅读弹窗 -->
     <div id="fullscreenModal" class="fullscreen-modal">
         <div class="fullscreen-content">
-            <button class="close-modal-btn" style="float: right; margin-bottom: 20px;" onclick="closeFullscreenModal()">关闭</button>
+            <button class="close-modal-btn" style="float: right; margin-bottom: 20px;" id="btn-close-fullscreen">关闭</button>
             <div id="fullscreen-content-inner"></div>
         </div>
     </div>
@@ -608,49 +617,121 @@
     <a href="index.html" class="back-btn">返回首页</a>
 
     <script>
-        // 存储所有内容数据
+        // 存储所有内容数据（优化：增加时间戳用于排序）
         const contentData = {
             reading: [
-                { title: "《活着》阅读笔记 - 第一章", type: "reading" },
-                { title: "《百年孤独》核心感悟", type: "reading" }
+                { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000 },
+                { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000 }
             ],
             portfolio: [
-                { title: "2026年度总结 - 个人成长", type: "portfolio" },
-                { title: "前端开发实战 - 项目复盘", type: "portfolio" }
+                { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000 },
+                { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000 }
             ],
             topic: [
-                { title: "如何提升阅读效率？", type: "topic" },
-                { title: "前端性能优化的核心思路", type: "topic" }
+                { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000 },
+                { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000 }
             ],
             dialog: [
-                { title: "《活着》- 余华（全本）", type: "dialog" },
-                { title: "《思考，快与慢》- 卡尼曼", type: "dialog" }
+                { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000 },
+                { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000 }
             ]
         };
 
-        // 1. 切换内容区域
-        function showContent(sectionId) {
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化事件绑定
+            initEventBindings();
+            // 初始化空状态检查
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
+                checkEmptyState(sectionId);
+            });
+            // 为所有item-card绑定点击事件
+            bindItemCardClick();
+        });
+
+        // 初始化所有事件绑定（优化：集中管理，提升可维护性）
+        function initEventBindings() {
+            // 侧边栏按钮
+            document.getElementById('btn-dialog').onclick = function() { showContent('dialog', this); };
+            document.getElementById('btn-reading').onclick = function() { showContent('reading', this); };
+            document.getElementById('btn-portfolio').onclick = function() { showContent('portfolio', this); };
+            document.getElementById('btn-topic').onclick = function() { showContent('topic', this); };
+
+            // 搜索/筛选按钮
+            document.getElementById('btn-search').onclick = function() { openResultModal('search'); };
+            document.getElementById('btn-filter').onclick = function() { openResultModal('filter'); };
+
+            // 弹窗关闭按钮
+            document.getElementById('btn-close-modal').onclick = closeResultModal;
+            document.getElementById('btn-close-fullscreen').onclick = closeFullscreenModal;
+
+            // 搜索/筛选执行按钮
+            document.getElementById('btn-execute-search').onclick = executeGlobalSearch;
+            document.getElementById('btn-execute-filter').onclick = executeGlobalFilter;
+
+            // 文件上传
+            document.getElementById('reading-upload').onchange = function() { handleFileUpload(this, 'reading'); };
+            document.getElementById('portfolio-upload').onchange = function() { handleFileUpload(this, 'portfolio'); };
+            document.getElementById('topic-upload').onchange = function() { handleFileUpload(this, 'topic'); };
+            document.getElementById('dialog-upload').onchange = function() { handleFileUpload(this, 'dialog'); };
+
+            // 点击遮罩层关闭弹窗
+            document.getElementById('resultModal').onclick = function(e) {
+                if (e.target === this) closeResultModal();
+            };
+            document.getElementById('fullscreenModal').onclick = function(e) {
+                if (e.target === this) closeFullscreenModal();
+            };
+
+            // 搜索框回车触发搜索
+            document.getElementById('globalSearchInput').onkeydown = function(e) {
+                if (e.key === 'Enter') executeGlobalSearch();
+            };
+        }
+
+        // 为所有item-card绑定点击事件
+        function bindItemCardClick() {
+            document.querySelectorAll('.item-card').forEach(card => {
+                card.onclick = function() {
+                    const sectionId = this.closest('.content-section').id;
+                    openFullscreenModal(sectionId, this);
+                };
+            });
+        }
+
+        // 1. 切换内容区域（优化：修复active状态绑定）
+        function showContent(sectionId, element) {
+            // 移除所有active状态
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            // 添加当前active状态
             document.getElementById(sectionId).classList.add('active');
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
+            if (element) element.classList.add('active');
+            // 关闭全屏弹窗
             closeFullscreenModal();
+            // 检查空状态
             checkEmptyState(sectionId);
         }
 
-        // 2. 删除条目
+        // 2. 删除条目（优化：更精准的标题匹配）
         function deleteItem(btn) {
             if (confirm('确定要删除该条目吗？')) {
                 const itemCard = btn.parentElement;
                 const sectionId = itemCard.closest('.content-section').id;
+                // 获取卡片标题
+                const title = itemCard.dataset.title || itemCard.firstChild.textContent.trim();
                 // 从数据中删除
-                const title = itemCard.firstChild.textContent.trim();
                 contentData[sectionId] = contentData[sectionId].filter(item => item.title !== title);
                 // 从DOM删除
                 itemCard.remove();
+                // 检查空状态
                 checkEmptyState(sectionId);
+                // 删除对应的上传文件记录
+                const fileItems = document.querySelectorAll(`#${sectionId}-files .uploaded-file-item`);
+                fileItems.forEach(fileItem => {
+                    const fileName = fileItem.firstChild.textContent.split(' (')[0];
+                    if (fileName === title) fileItem.remove();
+                });
             }
         }
 
@@ -661,19 +742,26 @@
             emptyText.style.display = items.length === 0 ? 'block' : 'none';
         }
 
-        // 4. 打开全屏阅读
+        // 4. 打开全屏阅读（优化：更灵活的内容渲染）
         function openFullscreenModal(type, element) {
             const modal = document.getElementById('fullscreenModal');
             const contentInner = document.getElementById('fullscreen-content-inner');
-            const title = element ? element.firstChild.textContent.trim() : '';
+            const title = element.dataset.title || element.firstChild.textContent.trim();
             
             let content = '';
+            const progressMap = {
+                reading: '30%',
+                portfolio: '100%',
+                topic: '70%',
+                dialog: '30%'
+            };
+
             switch(type) {
                 case 'reading':
                     content = `
                         <h2>${title}</h2>
                         <div class="progress-container">
-                            <div class="progress-bar" style="width: 30%;"></div>
+                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
                         </div>
                         <p>核心感悟：</p>
                         <p>《活着》的第一章通过第一人称的视角，描绘了作者年轻时收集民间歌谣的经历，偶遇了讲述自己一生的福贵老人。这段文字看似平淡，却为整个故事奠定了温暖又悲凉的基调。</p>
@@ -685,7 +773,7 @@
                     content = `
                         <h2>${title}</h2>
                         <div class="progress-container">
-                            <div class="progress-bar" style="width: 100%;"></div>
+                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
                         </div>
                         <p>创作时间：2026-02-28</p>
                         <p>作品类型：个人随笔</p>
@@ -699,7 +787,7 @@
                     content = `
                         <h2>${title}</h2>
                         <div class="progress-container">
-                            <div class="progress-bar" style="width: 70%;"></div>
+                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
                         </div>
                         <p>发布时间：2026-03-01</p>
                         <p>发布人：Zi-chu</p>
@@ -716,7 +804,7 @@
                     content = `
                         <h2>${title}</h2>
                         <div class="progress-container">
-                            <div class="progress-bar" style="width: 30%;"></div>
+                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
                         </div>
                         <p>我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。</p>
                         <p>我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。</p>
@@ -747,6 +835,7 @@
                 modalTitle.textContent = '全局搜索';
                 searchArea.style.display = 'block';
                 filterArea.style.display = 'none';
+                document.getElementById('globalSearchInput').focus();
             } else {
                 modalTitle.textContent = '内容筛选';
                 searchArea.style.display = 'none';
@@ -771,7 +860,7 @@
             document.getElementById('dialog-results').innerHTML = '';
         }
 
-        // 9. 执行全局搜索
+        // 9. 执行全局搜索（优化：增加加载状态、模糊搜索）
         function executeGlobalSearch() {
             const keyword = document.getElementById('globalSearchInput').value.trim();
             if (!keyword) {
@@ -779,45 +868,57 @@
                 return;
             }
             
+            // 显示加载状态
+            const loadingTip = document.getElementById('search-loading');
+            loadingTip.style.display = 'block';
             clearSearchResults();
-            let hasResult = false;
             
-            // 遍历所有内容类型进行搜索
-            for (const [type, items] of Object.entries(contentData)) {
-                const results = items.filter(item => item.title.includes(keyword));
-                const resultContainer = document.getElementById(`${type}-results`);
+            // 模拟搜索延迟，提升用户体验
+            setTimeout(() => {
+                let hasResult = false;
                 
-                if (results.length > 0) {
-                    hasResult = true;
-                    results.forEach(item => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'result-item';
-                        resultItem.textContent = item.title;
-                        resultItem.onclick = function() {
-                            // 切换到对应板块并打开详情
-                            showContent(type);
-                            closeResultModal();
-                            // 找到对应条目并打开全屏阅读
-                            const itemCards = document.querySelectorAll(`#${type} .item-card`);
-                            itemCards.forEach(card => {
-                                if (card.firstChild.textContent.trim() === item.title) {
-                                    openFullscreenModal(type, card);
-                                }
-                            });
-                        };
-                        resultContainer.appendChild(resultItem);
-                    });
-                } else {
-                    resultContainer.innerHTML = '<div class="result-item" style="color: #999; cursor: default;">暂无匹配内容</div>';
+                // 遍历所有内容类型进行搜索（优化：不区分大小写）
+                for (const [type, items] of Object.entries(contentData)) {
+                    const results = items.filter(item => 
+                        item.title.toLowerCase().includes(keyword.toLowerCase())
+                    );
+                    const resultContainer = document.getElementById(`${type}-results`);
+                    
+                    if (results.length > 0) {
+                        hasResult = true;
+                        results.forEach(item => {
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'result-item';
+                            resultItem.textContent = item.title;
+                            resultItem.onclick = function() {
+                                // 切换到对应板块并打开详情
+                                showContent(type, document.getElementById(`btn-${type}`));
+                                closeResultModal();
+                                // 找到对应条目并打开全屏阅读
+                                const itemCards = document.querySelectorAll(`#${type} .item-card`);
+                                itemCards.forEach(card => {
+                                    if (card.dataset.title === item.title || card.firstChild.textContent.trim() === item.title) {
+                                        openFullscreenModal(type, card);
+                                    }
+                                });
+                            };
+                            resultContainer.appendChild(resultItem);
+                        });
+                    } else {
+                        resultContainer.innerHTML = '<div class="result-item" style="color: #999; cursor: default;">暂无匹配内容</div>';
+                    }
                 }
-            }
-            
-            if (!hasResult) {
-                alert(`未找到包含"${keyword}"的内容`);
-            }
+                
+                // 隐藏加载状态
+                loadingTip.style.display = 'none';
+                
+                if (!hasResult) {
+                    alert(`未找到包含"${keyword}"的内容`);
+                }
+            }, 300);
         }
 
-        // 10. 执行全局筛选
+        // 10. 执行全局筛选（优化：基于时间戳真实排序）
         function executeGlobalFilter() {
             const sortType = document.querySelector('input[name="sort"]:checked').value;
             const filterTypes = [];
@@ -833,10 +934,12 @@
             const typesToShow = filterTypes.length > 0 ? filterTypes : Object.keys(contentData);
             
             typesToShow.forEach(type => {
-                const items = [...contentData[type]];
-                // 按时间排序（模拟）
-                if (sortType === 'oldest') {
-                    items.reverse();
+                let items = [...contentData[type]];
+                // 按时间戳排序（优化：真实时间排序）
+                if (sortType === 'newest') {
+                    items.sort((a, b) => b.timestamp - a.timestamp);
+                } else {
+                    items.sort((a, b) => a.timestamp - b.timestamp);
                 }
                 
                 const resultContainer = document.getElementById(`${type}-results`);
@@ -846,11 +949,11 @@
                         resultItem.className = 'result-item';
                         resultItem.textContent = item.title;
                         resultItem.onclick = function() {
-                            showContent(type);
+                            showContent(type, document.getElementById(`btn-${type}`));
                             closeResultModal();
                             const itemCards = document.querySelectorAll(`#${type} .item-card`);
                             itemCards.forEach(card => {
-                                if (card.firstChild.textContent.trim() === item.title) {
+                                if (card.dataset.title === item.title || card.firstChild.textContent.trim() === item.title) {
                                     openFullscreenModal(type, card);
                                 }
                             });
@@ -862,59 +965,67 @@
                 }
             });
             
-            alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，显示${filterTypes.length > 0 ? filterTypes.map(t => {
-                const map = {reading: '阅读笔记', portfolio: '个人作品', topic: '话题/疑问', dialog: '书籍'};
-                return map[t];
-            }).join('、') : '所有类型'}内容`);
+            // 优化提示文案
+            const typeMap = {reading: '阅读笔记', portfolio: '个人作品', topic: '话题/疑问', dialog: '书籍'};
+            const filterText = filterTypes.length > 0 ? filterTypes.map(t => typeMap[t]).join('、') : '所有类型';
+            alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，共展示${filterText}类内容`);
         }
 
-        // 11. 处理文件上传（移除大小限制）
+        // 11. 处理文件上传（优化：支持多文件上传、增加时间戳）
         function handleFileUpload(input, sectionId) {
             const files = input.files;
             if (files.length === 0) return;
             
-            const file = files[0];
             const fileListContainer = document.getElementById(`${sectionId}-files`);
-            
-            // 创建文件条目
-            const fileItem = document.createElement('div');
-            fileItem.className = 'uploaded-file-item';
-            fileItem.innerHTML = `
-                <span>${file.name} (${(file.size/1024/1024).toFixed(2)}MB)</span>
-                <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
-            `;
-            
-            fileListContainer.appendChild(fileItem);
-            
-            // 创建内容卡片（模拟上传后的展示）
             const contentContainer = document.getElementById(sectionId);
             const emptyTip = document.getElementById(`${sectionId}-empty`);
             emptyTip.style.display = 'none';
             
-            // 提取文件名作为标题
-            const fileName = file.name.split('.').slice(0, -1).join('.');
-            const newCard = document.createElement('div');
-            newCard.className = 'item-card';
-            newCard.onclick = function() { openFullscreenModal(sectionId, this); };
-            newCard.innerHTML = `
-                ${fileName}
-                <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-            `;
-            
-            // 添加到内容区顶部
-            const contentTitle = contentContainer.querySelector('h3');
-            contentContainer.insertBefore(newCard, contentTitle.nextSibling);
-            
-            // 添加到数据中
-            contentData[sectionId].push({ title: fileName, type: sectionId });
+            // 遍历上传的所有文件
+            Array.from(files).forEach(file => {
+                // 创建文件条目
+                const fileItem = document.createElement('div');
+                fileItem.className = 'uploaded-file-item';
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileItem.innerHTML = `
+                    <span>${file.name} (${fileSize}MB)</span>
+                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
+                `;
+                fileListContainer.appendChild(fileItem);
+                
+                // 提取文件名作为标题（去除扩展名）
+                const fileName = file.name.split('.').slice(0, -1).join('.');
+                // 创建内容卡片
+                const newCard = document.createElement('div');
+                newCard.className = 'item-card';
+                newCard.dataset.title = fileName; // 优化：使用data属性存储标题
+                newCard.innerHTML = `
+                    ${fileName}
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                `;
+                // 绑定点击事件
+                newCard.onclick = function() { openFullscreenModal(sectionId, this); };
+                
+                // 添加到内容区顶部
+                const contentTitle = contentContainer.querySelector('h3');
+                contentContainer.insertBefore(newCard, contentTitle.nextSibling);
+                
+                // 添加到数据中（优化：增加当前时间戳）
+                contentData[sectionId].push({ 
+                    title: fileName, 
+                    type: sectionId, 
+                    timestamp: Date.now() 
+                });
+            });
             
             // 清空文件输入
             input.value = '';
             
-            alert(`文件 "${file.name}" 上传成功！`);
+            // 优化提示文案
+            alert(`成功上传${files.length}个文件！`);
         }
 
-        // 12. 删除已上传的文件
+        // 12. 删除已上传的文件（优化：更精准的匹配）
         function deleteUploadedFile(btn, sectionId) {
             if (confirm('确定要删除该文件吗？')) {
                 const fileItem = btn.parentElement;
@@ -924,24 +1035,19 @@
                 // 删除对应的内容卡片
                 const itemCards = document.querySelectorAll(`#${sectionId} .item-card`);
                 itemCards.forEach(card => {
-                    if (card.firstChild.textContent.trim() === fileName) {
+                    if (card.dataset.title === fileName || card.firstChild.textContent.trim() === fileName) {
                         card.remove();
                     }
                 });
                 
                 // 从数据中删除
-                contentData[sectionId] = contentData[sectionId].filter(item => item.title !== fileName);
+                contentData[sectionId] = contentData[sectionId].filter(item => 
+                    item.title !== fileName
+                );
                 
                 checkEmptyState(sectionId);
             }
         }
-
-        // 初始化
-        window.onload = function() {
-            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                checkEmptyState(sectionId);
-            });
-        };
     </script>
 </body>
 </html>
