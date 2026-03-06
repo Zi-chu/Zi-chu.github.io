@@ -122,6 +122,99 @@
             border-top: 1px solid #eee;
             margin: 20px 0;
         }
+        /* 引言文字样式：蓝色+加粗 */
+        .intro-text {
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+        /* 上传按钮样式（同导航按钮） */
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin: 20px 0 10px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            border-radius: 0;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+        .upload-btn:hover {
+            background-color: #555;
+        }
+        /* 书籍列表样式 */
+        .book-item {
+            padding: 10px;
+            border: 1px solid #eee;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .book-item:hover {
+            background-color: #f0f7ff;
+        }
+        /* 阅读界面样式 */
+        .reading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .reading-content {
+            background: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        /* 进度条样式 */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #0066cc;
+            border-radius: 5px;
+            width: 30%; /* 默认进度30% */
+        }
+        /* 笔记卡片样式 */
+        .note-card {
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            background: #fff;
+        }
+        .note-card.half {
+            max-height: 100px;
+            overflow: hidden;
+        }
+        .note-card.full {
+            max-height: none;
+        }
+        .detail-btn {
+            color: #0066cc;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: inline-block;
+        }
         .back-btn {
             margin-top: 30px;
             padding: 8px 20px;
@@ -135,6 +228,16 @@
         .back-btn:hover {
             background-color: #555;
         }
+        /* 关闭阅读界面按钮 */
+        .close-btn {
+            float: right;
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -145,6 +248,8 @@
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
+            <!-- 新增：高质量深入对话区 -->
+            <div class="nav-btn" onclick="showContent('dialog')">高质量深入对话区</div>
             <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
             <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
             <div class="nav-btn" onclick="showContent('topic')">话题/疑问</div>
@@ -156,45 +261,86 @@
                 <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、书籍类型、感悟主题筛选</p>
             </div>
             <div class="content-display">
+                <!-- 1. Reading笔记（去掉功能区域+引言文字优化+新增上传按钮） -->
                 <div id="reading" class="content-section active">
                   <h2>Reading笔记</h2>
-                  <h3>页面引言</h3>
-                  <p>文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
-                  <h3>功能区域</h3>
-                  <p>🔍 <strong>搜索</strong>：搜索笔记标题或者内容、书籍名称或关键词</p>
-                  <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、书籍类型、感悟主题筛选</p>
+                  <p class="intro-text">文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
                   <h3>笔记内容展示区</h3>
                   <p>📚 暂未上传阅读笔记，敬请期待</p>
                   <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
                   <hr>
                   <p>板块标签：阅读感悟 | 碎片思考</p>
+                  <!-- 新增：上传按钮 -->
+                  <button class="upload-btn">上传阅读笔记文件</button>
                 </div>
+
+                <!-- 2. Personal作品集（去掉功能区域+引言文字优化+新增上传按钮） -->
                 <div id="portfolio" class="content-section">
                   <h2>Personal作品集</h2>
-                  <h3>页面引言</h3>
-                  <p>你仍然应该以公开写作为主。</p>
-                  <h3>功能区域</h3>
-                  <p>🔍 <strong>搜索</strong>：搜索作品标题或内容、关键词或创作类型</p>
-                  <p>📌 <strong>筛选</strong>：按创作时间（最新/最早）、作品类型、核心主题筛选</p>
+                  <p class="intro-text">你仍然应该以公开写作为主。</p>
                   <h3>作品内容展示区</h3>
                   <p>🔥 暂未上传个人作品，敬请期待</p>
                   <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
                   <hr>
                   <p>板块标签：深度创作 | 精品内容</p>
+                  <!-- 新增：上传按钮 -->
+                  <button class="upload-btn">上传作品集文件</button>
                 </div>
+
+                <!-- 3. 话题/疑问（去掉功能区域+引言文字优化+新增上传按钮） -->
                 <div id="topic" class="content-section">
                   <h2>话题/疑问</h2>
-                  <h3>页面引言</h3>
-                  <p>要么消散，要么解决。</p>
-                  <h3>功能区域</h3>
-                  <p>🔍 <strong>搜索</strong>：搜索话题关键词、疑问内容</p>
-                  <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、评论热度筛选</p>
+                  <p class="intro-text">要么消散，要么解决。</p>
                   <h3>话题内容展示区</h3>
                   <p>❓ 暂未发布话题/疑问，敬请期待</p>
                   <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
                   <hr>
                   <p>板块标签：观点碰撞 | 疑问探讨</p>
+                  <!-- 新增：上传按钮 -->
+                  <button class="upload-btn">上传话题/疑问文件</button>
                 </div>
+
+                <!-- 4. 新增：高质量深入对话区（书籍展示+阅读界面+笔记卡片） -->
+                <div id="dialog" class="content-section">
+                  <h2>高质量深入对话区</h2>
+                  <h3>已上传书籍列表</h3>
+                  <div class="book-item" onclick="openReadingModal()">《活着》- 余华（第一章）</div>
+                  <div class="book-item" onclick="openReadingModal()">《思考，快与慢》- 卡尼曼（第三章）</div>
+                  <!-- 新增：上传书籍按钮 -->
+                  <button class="upload-btn">上传书籍文件</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 阅读界面弹窗（带进度条+文字复制+笔记卡片） -->
+    <div id="readingModal" class="reading-modal">
+        <div class="reading-content">
+            <button class="close-btn" onclick="closeReadingModal()">关闭</button>
+            <h2>《活着》- 第一章</h2>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p style="margin: 20px 0;">
+                我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。
+                我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。
+                我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。
+            </p>
+            <p>
+                那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。
+                我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。
+            </p>
+            <button onclick="copyTextAndCreateNote()" style="margin: 10px 0; padding: 8px 15px; background: #0066cc; color: #fff; border: none; cursor: pointer;">
+                复制选中文字并添加到Reading笔记
+            </button>
+            
+            <!-- 笔记卡片（默认半展开） -->
+            <div id="noteCard" class="note-card half">
+                <p><strong>笔记标题：</strong> <input type="text" placeholder="输入笔记标题" style="width: 300px; padding: 5px; margin: 5px 0;"></p>
+                <p><strong>阅读书籍/文章：</strong> 《活着》- 第一章（自动填充）</p>
+                <p><strong>核心感悟：</strong> <textarea placeholder="输入核心感悟" style="width: 100%; height: 60px; margin: 5px 0;"></textarea></p>
+                <p><strong>发布时间：</strong> 2026-03-04 22:50（自动填充）</p>
+                <span class="detail-btn" onclick="toggleNoteCard()">查看详情</span>
             </div>
         </div>
     </div>
@@ -202,12 +348,46 @@
     <a href="index.html" class="back-btn">返回首页</a>
 
     <script>
+        // 1. 切换内容区域
         function showContent(sectionId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             event.target.classList.add('active');
+            // 关闭阅读弹窗（切换板块时）
+            document.getElementById('readingModal').style.display = 'none';
         }
+
+        // 2. 打开阅读界面
+        function openReadingModal() {
+            document.getElementById('readingModal').style.display = 'block';
+        }
+
+        // 3. 关闭阅读界面
+        function closeReadingModal() {
+            document.getElementById('readingModal').style.display = 'none';
+        }
+
+        // 4. 复制文字并创建笔记
+        function copyTextAndCreateNote() {
+            // 模拟复制选中文字（实际项目需结合选中事件）
+            alert('已复制选中文字！');
+            // 切换到Reading笔记板块
+            showContent('reading');
+            // 显示笔记卡片（自动跳转到Reading笔记后）
+            document.getElementById('noteCard').style.display = 'block';
+        }
+
+        // 5. 切换笔记卡片展开/收起
+        function toggleNoteCard() {
+            const card = document.getElementById('noteCard');
+            card.classList.toggle('full');
+            card.classList.toggle('half');
+            event.target.textContent = card.classList.contains('half') ? '查看详情' : '收起详情';
+        }
+
+        // 初始化：隐藏笔记卡片
+        document.getElementById('noteCard').style.display = 'none';
     </script>
 </body>
 </html>
