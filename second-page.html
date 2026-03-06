@@ -87,6 +87,99 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
+        /* 搜索/筛选样式优化 */
+        .search-filter-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .search-filter-item:hover {
+            background-color: #f0f7ff;
+        }
+        .search-filter-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .search-icon {
+            background-color: #0066cc; /* 蓝色实心圆 */
+        }
+        .filter-icon {
+            background-color: #ff4444; /* 红色实心圆 */
+        }
+        .search-filter-text {
+            font-weight: bold;
+        }
+        /* 搜索筛选弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .modal-btn-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .confirm-btn {
+            background-color: #0066cc;
+            color: #fff;
+        }
+        .cancel-btn {
+            background-color: #eee;
+            color: #333;
+        }
+        /* 筛选选项样式 */
+        .filter-option {
+            margin-bottom: 10px;
+        }
+        .filter-option label {
+            margin-left: 8px;
+            cursor: pointer;
+        }
         .content-display {
             width: 100%;
             min-height: 600px;
@@ -147,37 +240,58 @@
         .upload-btn:hover {
             background-color: #555;
         }
-        /* 书籍列表样式 */
-        .book-item {
+        /* 通用条目样式（书籍/笔记/作品/话题） */
+        .item-card {
             padding: 10px;
             border: 1px solid #eee;
             margin: 10px 0;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .book-item:hover {
+        .item-card:hover {
             background-color: #f0f7ff;
         }
-        /* 阅读界面样式 */
-        .reading-modal {
+        /* 删除按钮通用样式 */
+        .delete-btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover {
+            background: #ff0000;
+        }
+        /* 全屏阅读界面样式 */
+        .fullscreen-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
+            width: 100vw; /* 视口宽度100% */
+            height: 100vh; /* 视口高度100% */
+            background: rgba(0,0,0,0.9);
             z-index: 999;
             padding: 40px;
             overflow-y: auto;
         }
-        .reading-content {
+        .fullscreen-content {
             background: #fff;
-            max-width: 900px;
+            width: 90%; /* 占屏幕90%宽度 */
+            max-width: 1400px; /* 最大宽度 */
+            height: 90%; /* 占屏幕90%高度 */
             margin: 0 auto;
-            padding: 30px;
+            padding: 50px;
             border-radius: 8px;
+            font-size: 18px; /* 更大的字体 */
+            line-height: 2.2; /* 更舒适的行高 */
+            overflow-y: auto; /* 内容超出可滚动 */
         }
         /* 进度条样式 */
         .progress-container {
@@ -228,27 +342,32 @@
         .back-btn:hover {
             background-color: #555;
         }
-        /* 关闭阅读界面按钮 */
+        /* 关闭按钮通用样式 */
         .close-btn {
             float: right;
             background: #333;
             color: #fff;
             border: none;
-            padding: 5px 10px;
+            padding: 10px 15px;
             cursor: pointer;
             border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .close-btn:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
     <div class="top-title">最佳沉浸式Daily time</div>
-    <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你想象中更强大的习惯。</p>
+    <!-- 还原你指定的文案 -->
+    <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你更大的东西，成为一群痴迷者的一部分。</p>
     <hr class="top-divider">
 
     <div class="main-layout">
         <div class="nav-sidebar">
             <div class="nav-title">核心板块入口</div>
-            <!-- 新增：高质量深入对话区 -->
             <div class="nav-btn" onclick="showContent('dialog')">高质量深入对话区</div>
             <div class="nav-btn active" onclick="showContent('reading')">Reading笔记</div>
             <div class="nav-btn" onclick="showContent('portfolio')">Personal作品集</div>
@@ -257,90 +376,149 @@
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
-                <p>🔍 <strong>搜索</strong>：搜索笔记标题或者内容、书籍名称或关键词</p>
-                <p>📌 <strong>筛选</strong>：按发布时间（最新/最早）、书籍类型、感悟主题筛选</p>
+                <!-- 可点击的搜索和筛选 -->
+                <div class="search-filter-item" onclick="openModal('searchModal')">
+                    <span class="search-filter-icon search-icon"></span>
+                    <span class="search-filter-text">搜索：搜索笔记标题或者内容、书籍名称或关键词</span>
+                </div>
+                <div class="search-filter-item" onclick="openModal('filterModal')">
+                    <span class="search-filter-icon filter-icon"></span>
+                    <span class="search-filter-text">筛选：按发布时间（最新/最早）、书籍类型、感悟主题筛选</span>
+                </div>
             </div>
             <div class="content-display">
-                <!-- 1. Reading笔记（去掉功能区域+引言文字优化+新增上传按钮） -->
+                <!-- 1. Reading笔记区 -->
                 <div id="reading" class="content-section active">
                   <h2>Reading笔记</h2>
                   <p class="intro-text">文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
                   <h3>笔记内容展示区</h3>
-                  <p>📚 暂未上传阅读笔记，敬请期待</p>
+                  <!-- 示例笔记条目（带删除按钮） -->
+                  <div class="item-card" onclick="openFullscreenModal('reading')">
+                      《活着》阅读笔记 - 第一章
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <div class="item-card" onclick="openFullscreenModal('reading')">
+                      《百年孤独》核心感悟
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <p id="reading-empty" style="display: none;">📚 暂未上传阅读笔记，敬请期待</p>
                   <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
                   <hr>
                   <p>板块标签：阅读感悟 | 碎片思考</p>
-                  <!-- 新增：上传按钮 -->
                   <button class="upload-btn">上传阅读笔记文件</button>
                 </div>
 
-                <!-- 2. Personal作品集（去掉功能区域+引言文字优化+新增上传按钮） -->
+                <!-- 2. Personal作品集区 -->
                 <div id="portfolio" class="content-section">
                   <h2>Personal作品集</h2>
                   <p class="intro-text">你仍然应该以公开写作为主。</p>
                   <h3>作品内容展示区</h3>
-                  <p>🔥 暂未上传个人作品，敬请期待</p>
+                  <!-- 示例作品条目（带删除按钮） -->
+                  <div class="item-card" onclick="openFullscreenModal('portfolio')">
+                      2026年度总结 - 个人成长
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <div class="item-card" onclick="openFullscreenModal('portfolio')">
+                      前端开发实战 - 项目复盘
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <p id="portfolio-empty" style="display: none;">🔥 暂未上传个人作品，敬请期待</p>
                   <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
                   <hr>
                   <p>板块标签：深度创作 | 精品内容</p>
-                  <!-- 新增：上传按钮 -->
                   <button class="upload-btn">上传作品集文件</button>
                 </div>
 
-                <!-- 3. 话题/疑问（去掉功能区域+引言文字优化+新增上传按钮） -->
+                <!-- 3. 话题/疑问区 -->
                 <div id="topic" class="content-section">
                   <h2>话题/疑问</h2>
                   <p class="intro-text">要么消散，要么解决。</p>
                   <h3>话题内容展示区</h3>
-                  <p>❓ 暂未发布话题/疑问，敬请期待</p>
+                  <!-- 示例话题条目（带删除按钮） -->
+                  <div class="item-card" onclick="openFullscreenModal('topic')">
+                      如何提升阅读效率？
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <div class="item-card" onclick="openFullscreenModal('topic')">
+                      前端性能优化的核心思路
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <p id="topic-empty" style="display: none;">❓ 暂未发布话题/疑问，敬请期待</p>
                   <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
                   <hr>
                   <p>板块标签：观点碰撞 | 疑问探讨</p>
-                  <!-- 新增：上传按钮 -->
                   <button class="upload-btn">上传话题/疑问文件</button>
                 </div>
 
-                <!-- 4. 新增：高质量深入对话区（书籍展示+阅读界面+笔记卡片） -->
+                <!-- 4. 高质量深入对话区 -->
                 <div id="dialog" class="content-section">
                   <h2>高质量深入对话区</h2>
                   <h3>已上传书籍列表</h3>
-                  <div class="book-item" onclick="openReadingModal()">《活着》- 余华（第一章）</div>
-                  <div class="book-item" onclick="openReadingModal()">《思考，快与慢》- 卡尼曼（第三章）</div>
-                  <!-- 新增：上传书籍按钮 -->
+                  <!-- 示例书籍条目（带删除按钮） -->
+                  <div class="item-card" onclick="openFullscreenModal('dialog')">
+                      《活着》- 余华（全本）
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <div class="item-card" onclick="openFullscreenModal('dialog')">
+                      《思考，快与慢》- 卡尼曼
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                  </div>
+                  <p id="dialog-empty" style="display: none;">📚 暂未上传书籍，敬请期待</p>
                   <button class="upload-btn">上传书籍文件</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 阅读界面弹窗（带进度条+文字复制+笔记卡片） -->
-    <div id="readingModal" class="reading-modal">
-        <div class="reading-content">
-            <button class="close-btn" onclick="closeReadingModal()">关闭</button>
-            <h2>《活着》- 第一章</h2>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
+    <!-- 搜索弹窗 -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">全局搜索</div>
+            <input type="text" id="search-input" class="modal-input" placeholder="请输入搜索关键词...">
+            <div class="modal-btn-group">
+                <button class="modal-btn cancel-btn" onclick="closeModal('searchModal')">取消</button>
+                <button class="modal-btn confirm-btn" onclick="executeSearch()">搜索</button>
             </div>
-            <p style="margin: 20px 0;">
-                我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。
-                我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。
-                我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。
-            </p>
-            <p>
-                那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。
-                我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。
-            </p>
-            <button onclick="copyTextAndCreateNote()" style="margin: 10px 0; padding: 8px 15px; background: #0066cc; color: #fff; border: none; cursor: pointer;">
-                复制选中文字并添加到Reading笔记
-            </button>
-            
-            <!-- 笔记卡片（默认半展开） -->
-            <div id="noteCard" class="note-card half">
-                <p><strong>笔记标题：</strong> <input type="text" placeholder="输入笔记标题" style="width: 300px; padding: 5px; margin: 5px 0;"></p>
-                <p><strong>阅读书籍/文章：</strong> 《活着》- 第一章（自动填充）</p>
-                <p><strong>核心感悟：</strong> <textarea placeholder="输入核心感悟" style="width: 100%; height: 60px; margin: 5px 0;"></textarea></p>
-                <p><strong>发布时间：</strong> 2026-03-04 22:50（自动填充）</p>
-                <span class="detail-btn" onclick="toggleNoteCard()">查看详情</span>
+        </div>
+    </div>
+
+    <!-- 筛选弹窗 -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">内容筛选</div>
+            <div class="filter-option">
+                <input type="radio" name="sort" id="sort-newest" value="newest" checked>
+                <label for="sort-newest">发布时间：最新</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="sort" id="sort-oldest" value="oldest">
+                <label for="sort-oldest">发布时间：最早</label>
+            </div>
+            <div class="filter-option">
+                <input type="checkbox" id="filter-reading" value="reading">
+                <label for="filter-reading">仅显示：阅读笔记</label>
+            </div>
+            <div class="filter-option">
+                <input type="checkbox" id="filter-portfolio" value="portfolio">
+                <label for="filter-portfolio">仅显示：个人作品</label>
+            </div>
+            <div class="filter-option">
+                <input type="checkbox" id="filter-topic" value="topic">
+                <label for="filter-topic">仅显示：话题/疑问</label>
+            </div>
+            <div class="modal-btn-group">
+                <button class="modal-btn cancel-btn" onclick="closeModal('filterModal')">取消</button>
+                <button class="modal-btn confirm-btn" onclick="executeFilter()">应用筛选</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏阅读弹窗 -->
+    <div id="fullscreenModal" class="fullscreen-modal">
+        <div class="fullscreen-content">
+            <button class="close-btn" onclick="closeFullscreenModal()">关闭</button>
+            <div id="fullscreen-content-inner">
+                <!-- 动态加载的内容 -->
             </div>
         </div>
     </div>
@@ -353,41 +531,160 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            event.target.classList.add('active');
-            // 关闭阅读弹窗（切换板块时）
-            document.getElementById('readingModal').style.display = 'none';
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            closeFullscreenModal(); // 切换板块时关闭全屏弹窗
+            // 检查是否有内容条目，没有则显示空提示
+            checkEmptyState(sectionId);
         }
 
-        // 2. 打开阅读界面
-        function openReadingModal() {
-            document.getElementById('readingModal').style.display = 'block';
+        // 2. 通用删除功能（所有区域通用）
+        function deleteItem(btn) {
+            if (confirm('确定要删除该条目吗？')) {
+                const itemCard = btn.parentElement;
+                const sectionId = itemCard.closest('.content-section').id;
+                itemCard.remove();
+                // 检查删除后是否为空
+                checkEmptyState(sectionId);
+            }
         }
 
-        // 3. 关闭阅读界面
-        function closeReadingModal() {
-            document.getElementById('readingModal').style.display = 'none';
+        // 3. 检查空状态（显示/隐藏空提示）
+        function checkEmptyState(sectionId) {
+            const items = document.querySelectorAll(`#${sectionId} .item-card`);
+            const emptyText = document.getElementById(`${sectionId}-empty`);
+            if (items.length === 0) {
+                emptyText.style.display = 'block';
+            } else {
+                emptyText.style.display = 'none';
+            }
         }
 
-        // 4. 复制文字并创建笔记
-        function copyTextAndCreateNote() {
-            // 模拟复制选中文字（实际项目需结合选中事件）
-            alert('已复制选中文字！');
-            // 切换到Reading笔记板块
-            showContent('reading');
-            // 显示笔记卡片（自动跳转到Reading笔记后）
-            document.getElementById('noteCard').style.display = 'block';
+        // 4. 打开全屏阅读弹窗
+        function openFullscreenModal(type) {
+            const modal = document.getElementById('fullscreenModal');
+            const contentInner = document.getElementById('fullscreen-content-inner');
+            
+            // 根据类型加载不同的示例内容
+            let content = '';
+            switch(type) {
+                case 'reading':
+                    content = `
+                        <h2>《活着》阅读笔记 - 第一章</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 30%;"></div>
+                        </div>
+                        <p>核心感悟：</p>
+                        <p>《活着》的第一章通过第一人称的视角，描绘了作者年轻时收集民间歌谣的经历，偶遇了讲述自己一生的福贵老人。这段文字看似平淡，却为整个故事奠定了温暖又悲凉的基调。</p>
+                        <p>福贵老人的形象从一开始就充满了故事感，他哼着不知名的歌谣，不为别人理解，只为自己而唱，这也暗示了他一生的孤独与坚韧。</p>
+                        <p>文字的力量在于，它能把最平凡的生活细节，转化为直击人心的情感共鸣。</p>
+                    `;
+                    break;
+                case 'portfolio':
+                    content = `
+                        <h2>2026年度总结 - 个人成长</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 100%;"></div>
+                        </div>
+                        <p>创作时间：2026-02-28</p>
+                        <p>作品类型：个人随笔</p>
+                        <p>作品摘要：</p>
+                        <p>2026年是充满变化的一年，在职业上完成了从初级开发到中级开发的跨越，在生活上养成了每日阅读和写作的习惯。</p>
+                        <p>最大的收获不是技能的提升，而是学会了与自己和解，接受不完美，专注于长期主义的价值创造。</p>
+                        <p>未来一年的目标：深耕前端领域，输出10篇高质量技术文章，读完20本经典书籍。</p>
+                    `;
+                    break;
+                case 'topic':
+                    content = `
+                        <h2>如何提升阅读效率？</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 70%;"></div>
+                        </div>
+                        <p>发布时间：2026-03-01</p>
+                        <p>发布人：Zi-chu</p>
+                        <p>核心描述：</p>
+                        <p>随着信息爆炸，我们每天接触大量文字，但真正能吸收的内容却很少。如何提升阅读效率，既保证阅读质量，又能提高阅读速度？</p>
+                        <p>我的尝试：</p>
+                        <p>1. 带着问题阅读，先明确阅读目标；</p>
+                        <p>2. 分层次阅读，先读目录和摘要，再精读核心章节；</p>
+                        <p>3. 读完立即输出笔记，用自己的话复述核心观点。</p>
+                        <p>欢迎大家分享自己的阅读方法！</p>
+                    `;
+                    break;
+                case 'dialog':
+                    content = `
+                        <h2>《活着》- 余华（全本）</h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 30%;"></div>
+                        </div>
+                        <p>我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。</p>
+                        <p>我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。</p>
+                        <p>我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。</p>
+                        <p>那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。</p>
+                        <p>我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。</p>
+                    `;
+                    break;
+            }
+            
+            contentInner.innerHTML = content;
+            modal.style.display = 'block';
         }
 
-        // 5. 切换笔记卡片展开/收起
-        function toggleNoteCard() {
-            const card = document.getElementById('noteCard');
-            card.classList.toggle('full');
-            card.classList.toggle('half');
-            event.target.textContent = card.classList.contains('half') ? '查看详情' : '收起详情';
+        // 5. 关闭全屏阅读弹窗
+        function closeFullscreenModal() {
+            document.getElementById('fullscreenModal').style.display = 'none';
         }
 
-        // 初始化：隐藏笔记卡片
-        document.getElementById('noteCard').style.display = 'none';
+        // 6. 打开搜索/筛选弹窗
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // 7. 关闭搜索/筛选弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 8. 执行搜索功能
+        function executeSearch() {
+            const keyword = document.getElementById('search-input').value.trim();
+            if (!keyword) {
+                alert('请输入搜索关键词！');
+                return;
+            }
+            
+            // 模拟搜索逻辑（实际项目可结合后端接口）
+            alert(`正在搜索关键词：【${keyword}】\n\n已找到相关内容：2条\n1. 《活着》阅读笔记 - 第一章\n2. 《活着》- 余华（全本）`);
+            closeModal('searchModal');
+        }
+
+        // 9. 执行筛选功能
+        function executeFilter() {
+            const sortType = document.querySelector('input[name="sort"]:checked').value;
+            const filterTypes = [];
+            if (document.getElementById('filter-reading').checked) filterTypes.push('阅读笔记');
+            if (document.getElementById('filter-portfolio').checked) filterTypes.push('个人作品');
+            if (document.getElementById('filter-topic').checked) filterTypes.push('话题/疑问');
+            
+            // 模拟筛选逻辑
+            let filterText = `筛选条件：\n• 排序方式：${sortType === 'newest' ? '最新' : '最早'}`;
+            if (filterTypes.length > 0) {
+                filterText += `\n• 内容类型：${filterTypes.join('、')}`;
+            } else {
+                filterText += `\n• 内容类型：全部`;
+            }
+            
+            alert(filterText + '\n\n筛选已生效！');
+            closeModal('filterModal');
+        }
+
+        // 初始化：检查所有区域的空状态
+        window.onload = function() {
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
+                checkEmptyState(sectionId);
+            });
+        };
     </script>
 </body>
 </html>
