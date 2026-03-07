@@ -609,29 +609,7 @@
                     <h3>笔记内容展示区</h3>
                     <!-- 重构：网格布局容器 -->
                     <div class="books-grid" id="reading-grid">
-                        <!-- 示例笔记卡片 -->
-                        <div class="book-card" data-title="《活着》阅读笔记 - 第一章" data-progress="30">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">《活着》阅读笔记 - 第一章</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 30%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读30%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
-                        <div class="book-card" data-title="《百年孤独》核心感悟" data-progress="70">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">《百年孤独》核心感悟</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 70%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读70%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
+                        <!-- 初始内容会从本地存储加载 -->
                     </div>
                     <p id="reading-empty" class="empty-tip">📚 暂未上传阅读笔记，敬请期待</p>
                     <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
@@ -654,28 +632,7 @@
                     <p class="intro-text">你仍然应该以公开写作为主。</p>
                     <h3>作品内容展示区</h3>
                     <div class="books-grid" id="portfolio-grid">
-                        <div class="book-card" data-title="2026年度总结 - 个人成长" data-progress="100">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">2026年度总结 - 个人成长</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 100%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读100%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
-                        <div class="book-card" data-title="前端开发实战 - 项目复盘" data-progress="80">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">前端开发实战 - 项目复盘</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 80%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读80%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
+                        <!-- 初始内容会从本地存储加载 -->
                     </div>
                     <p id="portfolio-empty" class="empty-tip">🔥 暂未上传个人作品，敬请期待</p>
                     <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
@@ -697,28 +654,7 @@
                     <p class="intro-text">要么消散，要么解决。</p>
                     <h3>话题内容展示区</h3>
                     <div class="books-grid" id="topic-grid">
-                        <div class="book-card" data-title="如何提升阅读效率？" data-progress="70">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">如何提升阅读效率？</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 70%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读70%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
-                        <div class="book-card" data-title="前端性能优化的核心思路" data-progress="50">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">前端性能优化的核心思路</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 50%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读50%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
+                        <!-- 初始内容会从本地存储加载 -->
                     </div>
                     <p id="topic-empty" class="empty-tip">❓ 暂未发布话题/疑问，敬请期待</p>
                     <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
@@ -739,28 +675,7 @@
                     <h2>高质量深入对话区</h2>
                     <h3>已上传书籍列表</h3>
                     <div class="books-grid" id="dialog-grid">
-                        <div class="book-card" data-title="《活着》- 余华（全本）" data-progress="10">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">《活着》- 余华（全本）</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 10%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读10%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
-                        <div class="book-card" data-title="《思考，快与慢》- 卡尼曼" data-progress="15">
-                            <div class="book-cover"></div>
-                            <div class="book-info">
-                                <div class="book-title">《思考，快与慢》- 卡尼曼</div>
-                                <div class="book-progress-bar">
-                                    <div class="book-progress-fill" style="width: 15%;"></div>
-                                </div>
-                                <div class="book-progress-text">已读15%</div>
-                                <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                            </div>
-                        </div>
+                        <!-- 初始内容会从本地存储加载 -->
                     </div>
                     <p id="dialog-empty" class="empty-tip">📚 暂未上传书籍，敬请期待</p>
                     
@@ -889,34 +804,64 @@
     <div class="bottom-right-info">欢迎添加作者vx:zc3029410588反馈使用问题，谢谢合作</div>
 
     <script>
-        // 存储所有内容数据
-        const contentData = {
-            reading: [
-                { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000, progress: 30 },
-                { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000, progress: 70 }
-            ],
-            portfolio: [
-                { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000, progress: 100 },
-                { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000, progress: 80 }
-            ],
-            topic: [
-                { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000, progress: 70 },
-                { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000, progress: 50 }
-            ],
-            dialog: [
-                { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000, progress: 10 },
-                { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000, progress: 15 }
-            ]
-        };
+        // ========== 核心修复：持久化存储相关函数 ==========
+        // 从本地存储加载内容数据
+        function loadContentData() {
+            const savedData = localStorage.getItem('contentData');
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            // 默认初始数据
+            return {
+                reading: [
+                    { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000, progress: 30 },
+                    { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000, progress: 70 }
+                ],
+                portfolio: [
+                    { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000, progress: 100 },
+                    { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000, progress: 80 }
+                ],
+                topic: [
+                    { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000, progress: 70 },
+                    { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000, progress: 50 }
+                ],
+                dialog: [
+                    { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000, progress: 10 },
+                    { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000, progress: 15 }
+                ]
+            };
+        }
 
-        // 存储上传的文件对象
+        // 保存内容数据到本地存储
+        function saveContentData() {
+            localStorage.setItem('contentData', JSON.stringify(contentData));
+        }
+
+        // 从本地存储加载文件元数据
+        function loadFileMetadata() {
+            const savedMetadata = localStorage.getItem('fileMetadata');
+            return savedMetadata ? JSON.parse(savedMetadata) : {};
+        }
+
+        // 保存文件元数据到本地存储
+        function saveFileMetadata() {
+            localStorage.setItem('fileMetadata', JSON.stringify(fileMetadata));
+        }
+
+        // ========== 全局变量初始化 ==========
+        // 内容数据（从本地存储加载）
+        let contentData = loadContentData();
+        // 文件元数据（从本地存储加载）
+        let fileMetadata = loadFileMetadata();
+        // 上传的文件对象（内存中）
         const uploadedFiles = {};
-
-        // 存储阅读进度（本地存储）
+        // 阅读进度（本地存储）
         const readingProgress = JSON.parse(localStorage.getItem('readingProgress')) || {};
 
         // DOM加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 恢复文件元数据和卡片
+            restoreAllData();
             // 初始化事件绑定
             initEventBindings();
             // 初始化空状态检查
@@ -928,6 +873,56 @@
             // 初始化阅读设置
             initReadingSettings();
         });
+
+        // 恢复所有持久化数据
+        function restoreAllData() {
+            // 恢复每个板块的卡片和文件列表
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
+                const gridContainer = document.getElementById(`${sectionId}-grid`);
+                const fileListContainer = document.getElementById(`${sectionId}-files`);
+                const emptyTip = document.getElementById(`${sectionId}-empty`);
+                
+                // 清空现有内容
+                gridContainer.innerHTML = '';
+                fileListContainer.innerHTML = '';
+                
+                // 恢复内容卡片
+                contentData[sectionId].forEach(item => {
+                    const newCard = document.createElement('div');
+                    newCard.className = 'book-card';
+                    newCard.dataset.title = item.title;
+                    newCard.dataset.progress = item.progress;
+                    newCard.innerHTML = `
+                        <div class="book-cover"></div>
+                        <div class="book-info">
+                            <div class="book-title">${item.title}</div>
+                            <div class="book-progress-bar">
+                                <div class="book-progress-fill" style="width: ${item.progress}%;"></div>
+                            </div>
+                            <div class="book-progress-text">已读${item.progress}%</div>
+                            <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                        </div>
+                    `;
+                    gridContainer.appendChild(newCard);
+                });
+                
+                // 恢复文件列表
+                if (fileMetadata[sectionId]) {
+                    fileMetadata[sectionId].forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'uploaded-file-item';
+                        fileItem.innerHTML = `
+                            <span>${file.fullFileName} (${file.fileSize}MB)</span>
+                            <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${file.fileName}', '${file.fullFileName}')">删除</button>
+                        `;
+                        fileListContainer.appendChild(fileItem);
+                    });
+                }
+                
+                // 检查空状态
+                emptyTip.style.display = gridContainer.children.length === 0 ? 'block' : 'none';
+            });
+        }
 
         // 初始化所有事件绑定
         function initEventBindings() {
@@ -1034,7 +1029,7 @@
             checkEmptyState(sectionId);
         }
 
-        // 2. 删除条目
+        // 2. 删除条目（修复：同步更新本地存储）
         function deleteItem(btn) {
             if (confirm('确定要删除该条目吗？')) {
                 const bookCard = btn.closest('.book-card');
@@ -1043,6 +1038,8 @@
                 const title = bookCard.dataset.title;
                 // 从数据中删除
                 contentData[sectionId] = contentData[sectionId].filter(item => item.title !== title);
+                // 保存到本地存储
+                saveContentData();
                 // 从DOM删除
                 bookCard.remove();
                 // 检查空状态
@@ -1051,7 +1048,17 @@
                 const fileItems = document.querySelectorAll(`#${sectionId}-files .uploaded-file-item`);
                 fileItems.forEach(fileItem => {
                     const fileName = fileItem.firstChild.textContent.split(' (')[0];
-                    if (fileName === title) fileItem.remove();
+                    const fileBaseName = fileName.split('.').slice(0, -1).join('.');
+                    if (fileBaseName === title) {
+                        fileItem.remove();
+                        // 从文件元数据中删除
+                        if (fileMetadata[sectionId]) {
+                            fileMetadata[sectionId] = fileMetadata[sectionId].filter(
+                                item => item.fileName !== title
+                            );
+                            saveFileMetadata();
+                        }
+                    }
                 });
                 // 删除文件存储
                 delete uploadedFiles[`${sectionId}_${title}`];
@@ -1176,6 +1183,13 @@
                             element.dataset.progress = progressPercent;
                             element.querySelector('.book-progress-fill').style.width = `${progressPercent}%`;
                             element.querySelector('.book-progress-text').textContent = `已读${progressPercent}%`;
+                            
+                            // 更新contentData并保存
+                            const index = contentData[type].findIndex(item => item.title === title);
+                            if (index !== -1) {
+                                contentData[type][index].progress = progressPercent;
+                                saveContentData();
+                            }
                             
                             // 显示内容并定位到保存位置
                             const contentDiv = document.createElement('div');
@@ -1303,6 +1317,15 @@
                     bookCard.dataset.progress = progressPercent;
                     bookCard.querySelector('.book-progress-fill').style.width = `${progressPercent}%`;
                     bookCard.querySelector('.book-progress-text').textContent = `已读${pageNum}/${totalPages}页 (${progressPercent}%)`;
+                    
+                    // 更新contentData并保存
+                    const sectionId = fileKey.split('_')[0];
+                    const title = fileKey.split('_')[1];
+                    const index = contentData[sectionId].findIndex(item => item.title === title);
+                    if (index !== -1) {
+                        contentData[sectionId][index].progress = progressPercent;
+                        saveContentData();
+                    }
                 }
             }
             
@@ -1499,7 +1522,7 @@
             alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，共展示${filterText}类内容`);
         }
 
-        // 11. 处理文件上传
+        // 11. 处理文件上传（修复：同步保存到本地存储）
         function handleFileUpload(input, sectionId) {
             const files = input.files;
             if (files.length === 0) return;
@@ -1508,6 +1531,11 @@
             const gridContainer = document.getElementById(`${sectionId}-grid`);
             const emptyTip = document.getElementById(`${sectionId}-empty`);
             emptyTip.style.display = 'none';
+            
+            // 初始化文件元数据数组
+            if (!fileMetadata[sectionId]) {
+                fileMetadata[sectionId] = [];
+            }
             
             // 遍历上传的所有文件
             Array.from(files).forEach(file => {
@@ -1545,6 +1573,15 @@
                 `;
                 fileListContainer.appendChild(fileItem);
                 
+                // 保存文件元数据
+                fileMetadata[sectionId].push({
+                    fileName,
+                    fullFileName,
+                    fileSize,
+                    timestamp: Date.now()
+                });
+                saveFileMetadata();
+                
                 // 只有当内容卡片不存在时才创建
                 if (!existingCard) {
                     // 创建书籍卡片
@@ -1569,13 +1606,15 @@
                     // 添加到网格容器
                     gridContainer.appendChild(newCard);
                     
-                    // 添加到数据中
-                    contentData[sectionId].push({ 
+                    // 添加到数据中并保存
+                    const newItem = { 
                         title: fileName, 
                         type: sectionId, 
                         timestamp: Date.now(),
                         progress: 0 
-                    });
+                    };
+                    contentData[sectionId].push(newItem);
+                    saveContentData();
                     
                     // 如果是PDF文件，提前生成封面
                     const fileExtension = file.name.split('.').pop().toLowerCase();
@@ -1612,11 +1651,19 @@
             alert(`成功上传${files.length}个文件！`);
         }
 
-        // 12. 删除已上传的文件
+        // 12. 删除已上传的文件（修复：同步更新本地存储）
         function deleteUploadedFile(btn, sectionId, fileName, fullFileName) {
             if (confirm('确定要删除该文件吗？')) {
                 const fileItem = btn.parentElement;
                 fileItem.remove();
+                
+                // 从文件元数据中删除
+                if (fileMetadata[sectionId]) {
+                    fileMetadata[sectionId] = fileMetadata[sectionId].filter(
+                        item => item.fullFileName !== fullFileName
+                    );
+                    saveFileMetadata();
+                }
                 
                 // 删除文件存储
                 const fileKey = `${sectionId}_${fileName}`;
@@ -1627,13 +1674,13 @@
                 bookCards.forEach(card => {
                     if (card.dataset.title === fileName) {
                         card.remove();
+                        // 从contentData中删除并保存
+                        contentData[sectionId] = contentData[sectionId].filter(item => 
+                            item.title !== fileName
+                        );
+                        saveContentData();
                     }
                 });
-                
-                // 从数据中删除
-                contentData[sectionId] = contentData[sectionId].filter(item => 
-                    item.title !== fileName
-                );
                 
                 // 删除阅读进度记录
                 delete readingProgress[fileKey];
