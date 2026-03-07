@@ -401,6 +401,20 @@
             padding: 10px;
             display: none;
         }
+        /* 新增：文件内容展示样式 */
+        .file-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .file-not-supported {
+            color: #ff4444;
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -617,7 +631,7 @@
     <a href="index.html" class="back-btn">返回首页</a>
 
     <script>
-        // 存储所有内容数据（优化：增加时间戳用于排序）
+        // 存储所有内容数据（优化：增加时间戳用于排序，增加file对象存储文件内容）
         const contentData = {
             reading: [
                 { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000 },
@@ -636,6 +650,9 @@
                 { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000 }
             ]
         };
+
+        // 存储上传的文件对象（用于后续读取内容）
+        const uploadedFiles = {};
 
         // DOM加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -732,6 +749,8 @@
                     const fileName = fileItem.firstChild.textContent.split(' (')[0];
                     if (fileName === title) fileItem.remove();
                 });
+                // 删除文件存储
+                delete uploadedFiles[`${sectionId}_${title}`];
             }
         }
 
@@ -742,11 +761,15 @@
             emptyText.style.display = items.length === 0 ? 'block' : 'none';
         }
 
-        // 4. 打开全屏阅读（优化：更灵活的内容渲染）
+        // 4. 打开全屏阅读（核心修复：读取并展示文件内容）
         function openFullscreenModal(type, element) {
             const modal = document.getElementById('fullscreenModal');
             const contentInner = document.getElementById('fullscreen-content-inner');
             const title = element.dataset.title || element.firstChild.textContent.trim();
+            
+            // 检查是否是上传的文件
+            const fileKey = `${type}_${title}`;
+            const file = uploadedFiles[fileKey];
             
             let content = '';
             const progressMap = {
@@ -756,66 +779,120 @@
                 dialog: '30%'
             };
 
-            switch(type) {
-                case 'reading':
-                    content = `
-                        <h2>${title}</h2>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+            // 如果是上传的文件，读取文件内容
+            if (file) {
+                content = `
+                    <h2>${title}</h2>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                    </div>
+                    <div id="file-content-wrapper"></div>
+                `;
+                
+                contentInner.innerHTML = content;
+                const contentWrapper = document.getElementById('file-content-wrapper');
+                
+                // 显示加载状态
+                contentWrapper.innerHTML = '<div class="loading-tip" style="display:block;">正在加载文件内容...</div>';
+                
+                // 读取文件内容
+                const reader = new FileReader();
+                
+                // 根据文件类型选择读取方式
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                const textTypes = ['txt', 'md', 'html', 'htm', 'json', 'js', 'css', 'csv', 'xml'];
+                const ebookTypes = ['epub', 'mobi', 'txt']; // 常见电子书格式
+                
+                if (textTypes.includes(fileExtension) || ebookTypes.includes(fileExtension)) {
+                    reader.readAsText(file, 'UTF-8');
+                    reader.onload = function(e) {
+                        contentWrapper.innerHTML = `<div class="file-content">${e.target.result}</div>`;
+                    };
+                } else if (fileExtension === 'pdf') {
+                    // PDF文件提示（浏览器原生不支持直接读取PDF内容）
+                    contentWrapper.innerHTML = `
+                        <div class="file-not-supported">
+                            📄 PDF文件无法直接预览，请下载后查看<br>
+                            <button class="search-btn" style="margin-top:10px;" onclick="downloadFile('${fileKey}')">下载文件</button>
                         </div>
-                        <p>核心感悟：</p>
-                        <p>《活着》的第一章通过第一人称的视角，描绘了作者年轻时收集民间歌谣的经历，偶遇了讲述自己一生的福贵老人。这段文字看似平淡，却为整个故事奠定了温暖又悲凉的基调。</p>
-                        <p>福贵老人的形象从一开始就充满了故事感，他哼着不知名的歌谣，不为别人理解，只为自己而唱，这也暗示了他一生的孤独与坚韧。</p>
-                        <p>文字的力量在于，它能把最平凡的生活细节，转化为直击人心的情感共鸣。</p>
                     `;
-                    break;
-                case 'portfolio':
-                    content = `
-                        <h2>${title}</h2>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                } else {
+                    // 不支持的文件类型
+                    contentWrapper.innerHTML = `
+                        <div class="file-not-supported">
+                            ❌ 暂不支持预览${fileExtension.toUpperCase()}格式文件<br>
+                            <button class="search-btn" style="margin-top:10px;" onclick="downloadFile('${fileKey}')">下载文件</button>
                         </div>
-                        <p>创作时间：2026-02-28</p>
-                        <p>作品类型：个人随笔</p>
-                        <p>作品摘要：</p>
-                        <p>2026年是充满变化的一年，在职业上完成了从初级开发到中级开发的跨越，在生活上养成了每日阅读和写作的习惯。</p>
-                        <p>最大的收获不是技能的提升，而是学会了与自己和解，接受不完美，专注于长期主义的价值创造。</p>
-                        <p>未来一年的目标：深耕前端领域，输出10篇高质量技术文章，读完20本经典书籍。</p>
                     `;
-                    break;
-                case 'topic':
-                    content = `
-                        <h2>${title}</h2>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
-                        </div>
-                        <p>发布时间：2026-03-01</p>
-                        <p>发布人：Zi-chu</p>
-                        <p>核心描述：</p>
-                        <p>随着信息爆炸，我们每天接触大量文字，但真正能吸收的内容却很少。如何提升阅读效率，既保证阅读质量，又能提高阅读速度？</p>
-                        <p>我的尝试：</p>
-                        <p>1. 带着问题阅读，先明确阅读目标；</p>
-                        <p>2. 分层次阅读，先读目录和摘要，再精读核心章节；</p>
-                        <p>3. 读完立即输出笔记，用自己的话复述核心观点。</p>
-                        <p>欢迎大家分享自己的阅读方法！</p>
-                    `;
-                    break;
-                case 'dialog':
-                    content = `
-                        <h2>${title}</h2>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progressMap[type]};"></div>
-                        </div>
-                        <p>我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。</p>
-                        <p>我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。</p>
-                        <p>我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。</p>
-                        <p>那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。</p>
-                        <p>我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。</p>
-                    `;
-                    break;
+                }
+                
+                reader.onerror = function() {
+                    contentWrapper.innerHTML = `<div class="file-not-supported">❌ 文件读取失败：${reader.error.message}</div>`;
+                };
+            } else {
+                // 内置示例内容
+                switch(type) {
+                    case 'reading':
+                        content = `
+                            <h2>${title}</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                            </div>
+                            <p>核心感悟：</p>
+                            <p>《活着》的第一章通过第一人称的视角，描绘了作者年轻时收集民间歌谣的经历，偶遇了讲述自己一生的福贵老人。这段文字看似平淡，却为整个故事奠定了温暖又悲凉的基调。</p>
+                            <p>福贵老人的形象从一开始就充满了故事感，他哼着不知名的歌谣，不为别人理解，只为自己而唱，这也暗示了他一生的孤独与坚韧。</p>
+                            <p>文字的力量在于，它能把最平凡的生活细节，转化为直击人心的情感共鸣。</p>
+                        `;
+                        break;
+                    case 'portfolio':
+                        content = `
+                            <h2>${title}</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                            </div>
+                            <p>创作时间：2026-02-28</p>
+                            <p>作品类型：个人随笔</p>
+                            <p>作品摘要：</p>
+                            <p>2026年是充满变化的一年，在职业上完成了从初级开发到中级开发的跨越，在生活上养成了每日阅读和写作的习惯。</p>
+                            <p>最大的收获不是技能的提升，而是学会了与自己和解，接受不完美，专注于长期主义的价值创造。</p>
+                            <p>未来一年的目标：深耕前端领域，输出10篇高质量技术文章，读完20本经典书籍。</p>
+                        `;
+                        break;
+                    case 'topic':
+                        content = `
+                            <h2>${title}</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                            </div>
+                            <p>发布时间：2026-03-01</p>
+                            <p>发布人：Zi-chu</p>
+                            <p>核心描述：</p>
+                            <p>随着信息爆炸，我们每天接触大量文字，但真正能吸收的内容却很少。如何提升阅读效率，既保证阅读质量，又能提高阅读速度？</p>
+                            <p>我的尝试：</p>
+                            <p>1. 带着问题阅读，先明确阅读目标；</p>
+                            <p>2. 分层次阅读，先读目录和摘要，再精读核心章节；</p>
+                            <p>3. 读完立即输出笔记，用自己的话复述核心观点。</p>
+                            <p>欢迎大家分享自己的阅读方法！</p>
+                        `;
+                        break;
+                    case 'dialog':
+                        content = `
+                            <h2>${title}</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${progressMap[type]};"></div>
+                            </div>
+                            <p>我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。</p>
+                            <p>我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。</p>
+                            <p>我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。</p>
+                            <p>那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。</p>
+                            <p>我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。</p>
+                        `;
+                        break;
+                }
+                
+                contentInner.innerHTML = content;
             }
             
-            contentInner.innerHTML = content;
             modal.style.display = 'block';
         }
 
@@ -971,7 +1048,7 @@
             alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，共展示${filterText}类内容`);
         }
 
-        // 11. 处理文件上传（优化：支持多文件上传、增加时间戳）
+        // 11. 处理文件上传（核心修复：解决重复显示问题，存储文件对象）
         function handleFileUpload(input, sectionId) {
             const files = input.files;
             if (files.length === 0) return;
@@ -983,39 +1060,60 @@
             
             // 遍历上传的所有文件
             Array.from(files).forEach(file => {
+                // 检查文件是否已存在（核心修复：防止重复上传）
+                const fileName = file.name.split('.').slice(0, -1).join('.');
+                const existingFileItem = Array.from(fileListContainer.children).find(
+                    item => item.firstChild.textContent.startsWith(file.name)
+                );
+                
+                // 如果文件已存在，跳过
+                if (existingFileItem) {
+                    alert(`文件 "${file.name}" 已存在，无需重复上传！`);
+                    return;
+                }
+                
+                // 存储文件对象（用于后续读取）
+                const fileKey = `${sectionId}_${fileName}`;
+                uploadedFiles[fileKey] = file;
+                
                 // 创建文件条目
                 const fileItem = document.createElement('div');
                 fileItem.className = 'uploaded-file-item';
                 const fileSize = (file.size / 1024 / 1024).toFixed(2);
                 fileItem.innerHTML = `
                     <span>${file.name} (${fileSize}MB)</span>
-                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}')">删除</button>
+                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${fileName}')">删除</button>
                 `;
                 fileListContainer.appendChild(fileItem);
                 
-                // 提取文件名作为标题（去除扩展名）
-                const fileName = file.name.split('.').slice(0, -1).join('.');
-                // 创建内容卡片
-                const newCard = document.createElement('div');
-                newCard.className = 'item-card';
-                newCard.dataset.title = fileName; // 优化：使用data属性存储标题
-                newCard.innerHTML = `
-                    ${fileName}
-                    <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                `;
-                // 绑定点击事件
-                newCard.onclick = function() { openFullscreenModal(sectionId, this); };
+                // 检查是否已有同名卡片（防止重复创建）
+                const existingCard = Array.from(contentContainer.querySelectorAll('.item-card')).find(
+                    card => card.dataset.title === fileName
+                );
                 
-                // 添加到内容区顶部
-                const contentTitle = contentContainer.querySelector('h3');
-                contentContainer.insertBefore(newCard, contentTitle.nextSibling);
-                
-                // 添加到数据中（优化：增加当前时间戳）
-                contentData[sectionId].push({ 
-                    title: fileName, 
-                    type: sectionId, 
-                    timestamp: Date.now() 
-                });
+                if (!existingCard) {
+                    // 创建内容卡片
+                    const newCard = document.createElement('div');
+                    newCard.className = 'item-card';
+                    newCard.dataset.title = fileName; // 优化：使用data属性存储标题
+                    newCard.innerHTML = `
+                        ${fileName}
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                    `;
+                    // 绑定点击事件
+                    newCard.onclick = function() { openFullscreenModal(sectionId, this); };
+                    
+                    // 添加到内容区顶部
+                    const contentTitle = contentContainer.querySelector('h3');
+                    contentContainer.insertBefore(newCard, contentTitle.nextSibling);
+                    
+                    // 添加到数据中（优化：增加当前时间戳）
+                    contentData[sectionId].push({ 
+                        title: fileName, 
+                        type: sectionId, 
+                        timestamp: Date.now() 
+                    });
+                }
             });
             
             // 清空文件输入
@@ -1025,12 +1123,15 @@
             alert(`成功上传${files.length}个文件！`);
         }
 
-        // 12. 删除已上传的文件（优化：更精准的匹配）
-        function deleteUploadedFile(btn, sectionId) {
+        // 12. 删除已上传的文件（核心修复：同步删除文件存储）
+        function deleteUploadedFile(btn, sectionId, fileName) {
             if (confirm('确定要删除该文件吗？')) {
                 const fileItem = btn.parentElement;
-                const fileName = fileItem.firstChild.textContent.split(' (')[0];
                 fileItem.remove();
+                
+                // 删除文件存储
+                const fileKey = `${sectionId}_${fileName}`;
+                delete uploadedFiles[fileKey];
                 
                 // 删除对应的内容卡片
                 const itemCards = document.querySelectorAll(`#${sectionId} .item-card`);
@@ -1047,6 +1148,24 @@
                 
                 checkEmptyState(sectionId);
             }
+        }
+
+        // 13. 下载文件功能
+        function downloadFile(fileKey) {
+            const file = uploadedFiles[fileKey];
+            if (!file) {
+                alert('文件不存在！');
+                return;
+            }
+            
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
