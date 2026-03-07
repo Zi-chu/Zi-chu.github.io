@@ -18,6 +18,27 @@
             margin: 0 auto;
             line-height: 1.8;
             color: #333;
+            position: relative; /* 新增：为右下角文字定位 */
+            min-height: 100vh; /* 新增：确保页面高度铺满视口 */
+            padding-bottom: 60px; /* 新增：为底部文字留出空间 */
+        }
+        /* 优化：Zi-chu样式 - 精准定位+合适粗细+字号 */
+        .top-right-name {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #0066cc;
+            font-size: 28px; /* 调整为更合适的大小 */
+            font-weight: 500; /* 从bold改为500，粗细减半 */
+            z-index: 10; /* 确保在最上层 */
+        }
+        /* 新增：右下角反馈文字样式 */
+        .bottom-right-info {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            color: #000;
+            font-size: 12px;
         }
         .top-title {
             font-size: 21px;
@@ -415,9 +436,36 @@
             padding: 20px;
             font-size: 18px;
         }
+        /* 新增：PDF预览容器样式 */
+        .pdf-preview-container {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            margin-top: 20px;
+        }
+        /* 新增：图片预览样式 */
+        .image-preview-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
     </style>
+    <!-- 引入PDF预览库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <!-- 配置PDF.js的worker路径 -->
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </script>
 </head>
 <body>
+    <!-- 优化：Zi-chu文字 - 精准定位 -->
+    <div class="top-right-name">Zi-chu</div>
+    
     <div class="top-title">最佳沉浸式Daily time</div>
     <p class="top-desc">每天吃同样无聊的饭，每天穿同样无聊的衣服，每天在社交媒体上发布。建立比你更大的东西，成为一群痴迷者的一部分。</p>
     <hr class="top-divider">
@@ -630,6 +678,9 @@
 
     <a href="index.html" class="back-btn">返回首页</a>
 
+    <!-- 新增：右下角反馈文字 -->
+    <div class="bottom-right-info">欢迎添加作者vx:zc3029410588反馈使用问题，谢谢合作</div>
+
     <script>
         // 存储所有内容数据（优化：增加时间戳用于排序，增加file对象存储文件内容）
         const contentData = {
@@ -761,7 +812,7 @@
             emptyText.style.display = items.length === 0 ? 'block' : 'none';
         }
 
-        // 4. 打开全屏阅读（核心修复：读取并展示文件内容）
+        // 4. 打开全屏阅读（核心优化：支持PDF预览、图片预览，取消重复下载）
         function openFullscreenModal(type, element) {
             const modal = document.getElementById('fullscreenModal');
             const contentInner = document.getElementById('fullscreen-content-inner');
@@ -795,40 +846,98 @@
                 // 显示加载状态
                 contentWrapper.innerHTML = '<div class="loading-tip" style="display:block;">正在加载文件内容...</div>';
                 
-                // 读取文件内容
-                const reader = new FileReader();
-                
-                // 根据文件类型选择读取方式
+                // 获取文件扩展名
                 const fileExtension = file.name.split('.').pop().toLowerCase();
-                const textTypes = ['txt', 'md', 'html', 'htm', 'json', 'js', 'css', 'csv', 'xml'];
-                const ebookTypes = ['epub', 'mobi', 'txt']; // 常见电子书格式
                 
-                if (textTypes.includes(fileExtension) || ebookTypes.includes(fileExtension)) {
-                    reader.readAsText(file, 'UTF-8');
-                    reader.onload = function(e) {
-                        contentWrapper.innerHTML = `<div class="file-content">${e.target.result}</div>`;
-                    };
-                } else if (fileExtension === 'pdf') {
-                    // PDF文件提示（浏览器原生不支持直接读取PDF内容）
+                // 图片文件预览
+                const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+                if (imageTypes.includes(fileExtension)) {
+                    const imageUrl = URL.createObjectURL(file);
                     contentWrapper.innerHTML = `
-                        <div class="file-not-supported">
-                            📄 PDF文件无法直接预览，请下载后查看<br>
-                            <button class="search-btn" style="margin-top:10px;" onclick="downloadFile('${fileKey}')">下载文件</button>
-                        </div>
-                    `;
-                } else {
-                    // 不支持的文件类型
-                    contentWrapper.innerHTML = `
-                        <div class="file-not-supported">
-                            ❌ 暂不支持预览${fileExtension.toUpperCase()}格式文件<br>
-                            <button class="search-btn" style="margin-top:10px;" onclick="downloadFile('${fileKey}')">下载文件</button>
+                        <div class="image-preview-container">
+                            <img src="${imageUrl}" alt="${title}" class="image-preview">
                         </div>
                     `;
                 }
-                
-                reader.onerror = function() {
-                    contentWrapper.innerHTML = `<div class="file-not-supported">❌ 文件读取失败：${reader.error.message}</div>`;
-                };
+                // PDF文件预览
+                else if (fileExtension === 'pdf') {
+                    // 创建PDF预览容器
+                    contentWrapper.innerHTML = `
+                        <div id="pdf-viewer" class="pdf-preview-container"></div>
+                    `;
+                    
+                    // 使用PDF.js渲染PDF
+                    const pdfViewer = document.getElementById('pdf-viewer');
+                    const fileUrl = URL.createObjectURL(file);
+                    
+                    pdfjsLib.getDocument(fileUrl).promise.then(function(pdf) {
+                        // 渲染第一页
+                        pdf.getPage(1).then(function(page) {
+                            const scale = 1.5;
+                            const viewport = page.getViewport({ scale: scale });
+                            
+                            // 创建canvas元素
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            
+                            // 清空容器并添加canvas
+                            pdfViewer.innerHTML = '';
+                            pdfViewer.appendChild(canvas);
+                            
+                            // 渲染PDF页面
+                            const renderContext = {
+                                canvasContext: context,
+                                viewport: viewport
+                            };
+                            page.render(renderContext);
+                            
+                            // 添加页码导航
+                            const navDiv = document.createElement('div');
+                            navDiv.style.textAlign = 'center';
+                            navDiv.style.marginTop = '10px';
+                            navDiv.innerHTML = `
+                                <button class="search-btn" style="margin-right: 10px;" onclick="renderPdfPage(${pdf.numPages}, 1, '${fileUrl}')">上一页</button>
+                                <span>第 1 页 / 共 ${pdf.numPages} 页</span>
+                                <button class="search-btn" style="margin-left: 10px;" onclick="renderPdfPage(${pdf.numPages}, 2, '${fileUrl}')">下一页</button>
+                            `;
+                            pdfViewer.appendChild(navDiv);
+                        });
+                    }).catch(function(error) {
+                        contentWrapper.innerHTML = `
+                            <div class="file-not-supported">
+                                📄 PDF文件加载失败：${error.message}<br>
+                                您可以直接在本地打开该文件查看
+                            </div>
+                        `;
+                    });
+                }
+                // 文本类文件预览
+                else {
+                    const textTypes = ['txt', 'md', 'html', 'htm', 'json', 'js', 'css', 'csv', 'xml'];
+                    const ebookTypes = ['epub', 'mobi', 'txt'];
+                    
+                    if (textTypes.includes(fileExtension) || ebookTypes.includes(fileExtension)) {
+                        const reader = new FileReader();
+                        reader.readAsText(file, 'UTF-8');
+                        reader.onload = function(e) {
+                            contentWrapper.innerHTML = `<div class="file-content">${e.target.result}</div>`;
+                        };
+                        reader.onerror = function() {
+                            contentWrapper.innerHTML = `<div class="file-not-supported">❌ 文件读取失败：${reader.error.message}</div>`;
+                        };
+                    }
+                    // 其他文件类型 - 仅提示无需下载
+                    else {
+                        contentWrapper.innerHTML = `
+                            <div class="file-not-supported">
+                                ℹ️ 暂不支持预览${fileExtension.toUpperCase()}格式文件<br>
+                                您可以直接在本地打开该文件查看
+                            </div>
+                        `;
+                    }
+                }
             } else {
                 // 内置示例内容
                 switch(type) {
@@ -895,6 +1004,44 @@
             
             modal.style.display = 'block';
         }
+
+        // PDF页码渲染函数（全局函数）
+        window.renderPdfPage = function(totalPages, pageNum, fileUrl) {
+            if (pageNum < 1) pageNum = totalPages;
+            if (pageNum > totalPages) pageNum = 1;
+            
+            const pdfViewer = document.getElementById('pdf-viewer');
+            pdfjsLib.getDocument(fileUrl).promise.then(function(pdf) {
+                pdf.getPage(pageNum).then(function(page) {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    pdfViewer.innerHTML = '';
+                    pdfViewer.appendChild(canvas);
+                    
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                    
+                    const navDiv = document.createElement('div');
+                    navDiv.style.textAlign = 'center';
+                    navDiv.style.marginTop = '10px';
+                    navDiv.innerHTML = `
+                        <button class="search-btn" style="margin-right: 10px;" onclick="renderPdfPage(${totalPages}, ${pageNum-1}, '${fileUrl}')">上一页</button>
+                        <span>第 ${pageNum} 页 / 共 ${totalPages} 页</span>
+                        <button class="search-btn" style="margin-left: 10px;" onclick="renderPdfPage(${totalPages}, ${pageNum+1}, '${fileUrl}')">下一页</button>
+                    `;
+                    pdfViewer.appendChild(navDiv);
+                });
+            });
+        };
 
         // 5. 关闭全屏阅读
         function closeFullscreenModal() {
@@ -1048,7 +1195,7 @@
             alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，共展示${filterText}类内容`);
         }
 
-        // 11. 处理文件上传（核心修复：解决重复显示问题，存储文件对象）
+        // 11. 处理文件上传（核心修复：彻底解决重复显示问题）
         function handleFileUpload(input, sectionId) {
             const files = input.files;
             if (files.length === 0) return;
@@ -1060,42 +1207,46 @@
             
             // 遍历上传的所有文件
             Array.from(files).forEach(file => {
-                // 检查文件是否已存在（核心修复：防止重复上传）
+                // 获取纯文件名（不含扩展名）
                 const fileName = file.name.split('.').slice(0, -1).join('.');
+                const fullFileName = file.name;
+                
+                // 1. 检查文件列表中是否已存在该文件
                 const existingFileItem = Array.from(fileListContainer.children).find(
-                    item => item.firstChild.textContent.startsWith(file.name)
+                    item => item.firstChild.textContent.startsWith(fullFileName)
                 );
                 
                 // 如果文件已存在，跳过
                 if (existingFileItem) {
-                    alert(`文件 "${file.name}" 已存在，无需重复上传！`);
+                    alert(`文件 "${fullFileName}" 已存在，无需重复上传！`);
                     return;
                 }
+                
+                // 2. 检查内容卡片中是否已存在同名条目
+                const existingCard = Array.from(contentContainer.querySelectorAll('.item-card')).find(
+                    card => card.dataset.title === fileName
+                );
                 
                 // 存储文件对象（用于后续读取）
                 const fileKey = `${sectionId}_${fileName}`;
                 uploadedFiles[fileKey] = file;
                 
-                // 创建文件条目
+                // 创建文件条目（只在文件列表显示，不再重复创建内容卡片）
                 const fileItem = document.createElement('div');
                 fileItem.className = 'uploaded-file-item';
                 const fileSize = (file.size / 1024 / 1024).toFixed(2);
                 fileItem.innerHTML = `
-                    <span>${file.name} (${fileSize}MB)</span>
-                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${fileName}')">删除</button>
+                    <span>${fullFileName} (${fileSize}MB)</span>
+                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${fileName}', '${fullFileName}')">删除</button>
                 `;
                 fileListContainer.appendChild(fileItem);
                 
-                // 检查是否已有同名卡片（防止重复创建）
-                const existingCard = Array.from(contentContainer.querySelectorAll('.item-card')).find(
-                    card => card.dataset.title === fileName
-                );
-                
+                // 只有当内容卡片不存在时才创建
                 if (!existingCard) {
                     // 创建内容卡片
                     const newCard = document.createElement('div');
                     newCard.className = 'item-card';
-                    newCard.dataset.title = fileName; // 优化：使用data属性存储标题
+                    newCard.dataset.title = fileName; // 使用data属性存储标题
                     newCard.innerHTML = `
                         ${fileName}
                         <button class="delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
@@ -1107,7 +1258,7 @@
                     const contentTitle = contentContainer.querySelector('h3');
                     contentContainer.insertBefore(newCard, contentTitle.nextSibling);
                     
-                    // 添加到数据中（优化：增加当前时间戳）
+                    // 添加到数据中
                     contentData[sectionId].push({ 
                         title: fileName, 
                         type: sectionId, 
@@ -1119,12 +1270,12 @@
             // 清空文件输入
             input.value = '';
             
-            // 优化提示文案
+            // 提示上传成功
             alert(`成功上传${files.length}个文件！`);
         }
 
-        // 12. 删除已上传的文件（核心修复：同步删除文件存储）
-        function deleteUploadedFile(btn, sectionId, fileName) {
+        // 12. 删除已上传的文件（优化：同步删除文件存储和内容卡片）
+        function deleteUploadedFile(btn, sectionId, fileName, fullFileName) {
             if (confirm('确定要删除该文件吗？')) {
                 const fileItem = btn.parentElement;
                 fileItem.remove();
@@ -1150,23 +1301,10 @@
             }
         }
 
-        // 13. 下载文件功能
-        function downloadFile(fileKey) {
-            const file = uploadedFiles[fileKey];
-            if (!file) {
-                alert('文件不存在！');
-                return;
-            }
-            
-            const url = URL.createObjectURL(file);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = file.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        // 13. 移除下载文件功能（因为文件已在本地）
+        window.downloadFile = function(fileKey) {
+            alert('该文件已存在于您的本地电脑中，无需重复下载！');
+        };
     </script>
 </body>
 </html>
