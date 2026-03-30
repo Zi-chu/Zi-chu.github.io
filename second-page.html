@@ -630,11 +630,70 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        
+        /* 进度更新弹窗样式 */
+        .progress-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1001;
+            min-width: 300px;
+        }
+        .progress-modal h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .progress-slider {
+            width: 100%;
+            margin: 15px 0;
+        }
+        .progress-value {
+            text-align: center;
+            font-size: 14px;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .progress-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .progress-btn {
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .progress-save {
+            background: #0066cc;
+            color: #fff;
+        }
+        .progress-cancel {
+            background: #eee;
+            color: #333;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    </script>
+    <!-- 更换更稳定的PDF.js CDN -->
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 </head>
 <body>
     <div class="top-right-name">Zi-chu</div>
@@ -836,18 +895,45 @@
         </div>
     </div>
 
+    <!-- 新增进度更新弹窗 -->
+    <div class="overlay" id="progressOverlay"></div>
+    <div class="progress-modal" id="progressModal">
+      <h3 id="progressModalTitle">更新阅读进度</h3>
+      <input type="range" min="0" max="100" value="0" class="progress-slider" id="progressSlider">
+      <div class="progress-value" id="progressValue">已读：0%</div>
+      <div class="progress-btn-group">
+        <button class="progress-btn progress-save" id="saveProgressBtn">保存进度</button>
+        <button class="progress-btn progress-cancel" id="cancelProgressBtn">取消</button>
+      </div>
+    </div>
+
     <a href="index.html" class="back-btn">返回首页</a>
     <div class="bottom-right-info">欢迎添加作者vx:zc3029410588反馈使用问题，谢谢合作</div>
 
     <script>
+        // 配置PDF.js worker
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+        }
+
         // ====================== 纯本地存储，永远不丢数据，无需后端 ======================
         function saveToLocal(key, value) {
-            localStorage.setItem(key, JSON.stringify(value));
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {
+                console.warn('本地存储失败:', e);
+                alert('本地存储空间不足，部分功能可能受限');
+            }
         }
 
         function loadFromLocal(key) {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                console.warn('读取本地存储失败:', e);
+                return null;
+            }
         }
 
         // ====================== 全局数据初始化 ======================
@@ -865,15 +951,26 @@
 
         // ====================== 启动加载 ======================
         document.addEventListener("DOMContentLoaded", function () {
+            // 初始化数据
             contentData = loadFromLocal("contentData") || defaultData;
             fileMetadata = loadFromLocal("fileMetadata") || {};
             readingProgress = loadFromLocal("readingProgress") || {};
 
+            // 初始化页面
             restoreAllData();
             initEventBindings();
             ['reading', 'portfolio', 'topic', 'dialog'].forEach(checkEmptyState);
             bindBookCardClick();
             initReadingSettings();
+            
+            // 初始化进度弹窗事件
+            document.getElementById('progressOverlay').onclick = closeProgressModal;
+            document.getElementById('saveProgressBtn').onclick = function() {
+                const progress = parseInt(document.getElementById('progressSlider').value);
+                saveReadingProgress(progress);
+                closeProgressModal();
+            };
+            document.getElementById('cancelProgressBtn').onclick = closeProgressModal;
         });
 
         // ====================== 保存到本地 ======================
@@ -896,15 +993,15 @@
                     const card = document.createElement('div');
                     card.className = 'book-card';
                     card.dataset.title = item.title;
-                    card.dataset.progress = item.progress;
+                    card.dataset.progress = item.progress || 0;
                     card.innerHTML = `
                         <div class="book-cover"></div>
                         <div class="book-info">
                             <div class="book-title">${item.title}</div>
                             <div class="book-progress-bar">
-                                <div class="book-progress-fill" style="width:${item.progress}%"></div>
+                                <div class="book-progress-fill" style="width:${item.progress || 0}%"></div>
                             </div>
-                            <div class="book-progress-text">已读${item.progress}%</div>
+                            <div class="book-progress-text">已读${item.progress || 0}%</div>
                             <button class="book-delete-btn" onclick="event.stopPropagation();deleteItem(this)">删除</button>
                         </div>
                     `;
@@ -925,20 +1022,27 @@
         }
 
         function initEventBindings() {
-            document.getElementById('btn-dialog').onclick = () => showContent('dialog', this);
-            document.getElementById('btn-reading').onclick = () => showContent('reading', this);
-            document.getElementById('btn-portfolio').onclick = () => showContent('portfolio', this);
-            document.getElementById('btn-topic').onclick = () => showContent('topic', this);
+            // 导航按钮事件
+            document.getElementById('btn-dialog').onclick = function() { showContent('dialog', this); };
+            document.getElementById('btn-reading').onclick = function() { showContent('reading', this); };
+            document.getElementById('btn-portfolio').onclick = function() { showContent('portfolio', this); };
+            document.getElementById('btn-topic').onclick = function() { showContent('topic', this); };
+            
+            // 搜索/筛选事件
             document.getElementById('btn-search').onclick = () => openResultModal('search');
             document.getElementById('btn-filter').onclick = () => openResultModal('filter');
             document.getElementById('btn-close-modal').onclick = closeResultModal;
             document.getElementById('btn-close-fullscreen').onclick = closeFullscreenModal;
             document.getElementById('btn-execute-search').onclick = executeGlobalSearch;
             document.getElementById('btn-execute-filter').onclick = executeGlobalFilter;
+            
+            // 文件上传事件
             document.getElementById('reading-upload').onchange = e => handleFileUpload(e.target, 'reading');
             document.getElementById('portfolio-upload').onchange = e => handleFileUpload(e.target, 'portfolio');
             document.getElementById('topic-upload').onchange = e => handleFileUpload(e.target, 'topic');
             document.getElementById('dialog-upload').onchange = e => handleFileUpload(e.target, 'dialog');
+            
+            // 阅读设置事件
             document.getElementById('toggleSettings').onclick = () => document.getElementById('settingsPanel').classList.toggle('active');
             document.getElementById('fontSizeSelect').onchange = updateReadingSettings;
             document.getElementById('bgColorSelect').onchange = updateReadingSettings;
@@ -947,23 +1051,27 @@
 
         function initReadingSettings() {
             const inner = document.getElementById('fullscreen-content-inner');
-            inner.style.fontSize = '16px';
-            inner.style.backgroundColor = '#fff';
-            inner.style.lineHeight = '2';
+            if (inner) {
+                inner.style.fontSize = '16px';
+                inner.style.backgroundColor = '#fff';
+                inner.style.lineHeight = '2';
+            }
         }
 
         function updateReadingSettings() {
             const inner = document.getElementById('fullscreen-content-inner');
-            inner.style.fontSize = document.getElementById('fontSizeSelect').value + 'px';
-            inner.style.backgroundColor = document.getElementById('bgColorSelect').value;
-            inner.style.lineHeight = document.getElementById('lineHeightSelect').value;
+            if (inner) {
+                inner.style.fontSize = document.getElementById('fontSizeSelect').value + 'px';
+                inner.style.backgroundColor = document.getElementById('bgColorSelect').value;
+                inner.style.lineHeight = document.getElementById('lineHeightSelect').value;
+            }
         }
 
         function bindBookCardClick() {
             document.querySelectorAll('.book-card').forEach(card => {
-                card.onclick = () => {
-                    const sec = card.closest('.content-section').id;
-                    const title = card.dataset.title;
+                card.onclick = function() {
+                    const sec = this.closest('.content-section').id;
+                    const title = this.dataset.title;
                     openFullscreenModal(sec, title);
                 };
             });
@@ -983,7 +1091,13 @@
             const card = btn.closest('.book-card');
             const sec = card.closest('.content-section').id;
             const title = card.dataset.title;
+            
+            // 删除数据
             contentData[sec] = (contentData[sec] || []).filter(x => x.title !== title);
+            fileMetadata[sec] = (fileMetadata[sec] || []).filter(x => x.fileName !== title);
+            delete uploadedFiles[`${sec}_${title}`];
+            delete readingProgress[`${sec}_${title}`];
+            
             saveAll();
             card.remove();
             checkEmptyState(sec);
@@ -992,18 +1106,36 @@
         function checkEmptyState(sec) {
             const grid = document.getElementById(`${sec}-grid`);
             const empty = document.getElementById(`${sec}-empty`);
-            empty.style.display = grid.children.length === 0 ? 'block' : 'none';
+            if (grid && empty) {
+                empty.style.display = grid.children.length === 0 ? 'block' : 'none';
+            }
         }
 
-        // 重构全屏阅读函数，新增文件内容展示逻辑
+        // 全局文件信息存储
+        let currentFileInfo = {
+            section: '',
+            title: '',
+            key: ''
+        };
+
+        // 重构全屏阅读函数，确保文件预览正常
         function openFullscreenModal(section, title) {
             const fullscreenModal = document.getElementById('fullscreenModal');
             const contentInner = document.getElementById('fullscreen-content-inner');
+            
+            // 清空内容并显示加载状态
+            contentInner.innerHTML = '<div class="loading-tip" style="display:block;">正在加载文件...</div>';
             fullscreenModal.style.display = 'block';
-            contentInner.innerHTML = '';
 
-            // 获取对应的文件对象
+            // 存储当前文件信息
             const fileKey = `${section}_${title}`;
+            currentFileInfo = {
+                section: section,
+                title: title,
+                key: fileKey
+            };
+
+            // 获取文件对象
             const file = uploadedFiles[fileKey];
             
             if (!file) {
@@ -1011,45 +1143,68 @@
                 return;
             }
 
-            // 根据文件类型解析并展示内容
-            const fileType = file.type;
+            // 创建文件阅读器
             const reader = new FileReader();
-
-            // 文本类文件（txt、json、md等）
-            if (fileType.includes('text') || 
+            
+            // 文本文件预览
+            if (file.type.includes('text') || 
                 file.name.endsWith('.txt') || 
                 file.name.endsWith('.md') || 
-                file.name.endsWith('.json')) {
+                file.name.endsWith('.json') ||
+                file.name.endsWith('.html')) {
                 reader.onload = function(e) {
-                    contentInner.innerHTML = `<div class="file-content">${e.target.result}</div>`;
+                    contentInner.innerHTML = `
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                          <button class="settings-btn" onclick="openProgressModal(${readingProgress[fileKey] || 0})">更新阅读进度</button>
+                        </div>
+                        <div class="file-content">${e.target.result}</div>
+                    `;
+                };
+                reader.onerror = function() {
+                    contentInner.innerHTML = '<div class="file-not-supported">❌ 文件读取失败</div>';
                 };
                 reader.readAsText(file);
             }
-            // PDF文件
-            else if (fileType.includes('pdf') || file.name.endsWith('.pdf')) {
-                contentInner.innerHTML = '<div class="loading-tip" style="display:block;">正在加载PDF文件...</div>';
+            // PDF文件预览
+            else if (file.type.includes('pdf') || file.name.endsWith('.pdf')) {
                 reader.onload = function(e) {
-                    const pdfData = new Uint8Array(e.target.result);
-                    renderPdfFile(pdfData, contentInner);
+                    try {
+                        const pdfData = new Uint8Array(e.target.result);
+                        renderPdfFile(pdfData, contentInner, readingProgress[fileKey] || 0);
+                    } catch (error) {
+                        contentInner.innerHTML = `<div class="file-not-supported">❌ PDF解析失败：${error.message}</div>`;
+                    }
+                };
+                reader.onerror = function() {
+                    contentInner.innerHTML = '<div class="file-not-supported">❌ PDF文件读取失败</div>';
                 };
                 reader.readAsArrayBuffer(file);
             }
-            // 图片文件
-            else if (fileType.includes('image')) {
+            // 图片文件预览
+            else if (file.type.includes('image')) {
                 reader.onload = function(e) {
                     contentInner.innerHTML = `
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                          <button class="settings-btn" onclick="openProgressModal(${readingProgress[fileKey] || 0})">更新阅读进度</button>
+                        </div>
                         <div class="image-preview-container">
                             <img src="${e.target.result}" class="image-preview" alt="${title}">
                         </div>
                     `;
+                };
+                reader.onerror = function() {
+                    contentInner.innerHTML = '<div class="file-not-supported">❌ 图片文件读取失败</div>';
                 };
                 reader.readAsDataURL(file);
             }
             // 不支持的文件类型
             else {
                 contentInner.innerHTML = `
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                      <button class="settings-btn" onclick="openProgressModal(${readingProgress[fileKey] || 0})">更新阅读进度</button>
+                    </div>
                     <div class="file-not-supported">
-                        ❌ 暂不支持预览该类型文件 (${fileType})<br>
+                        ❌ 暂不支持预览该类型文件 (${file.type})<br>
                         文件名称：${file.name}<br>
                         文件大小：${(file.size/1024/1024).toFixed(2)}MB
                     </div>
@@ -1057,13 +1212,34 @@
             }
         }
 
-        // PDF文件渲染函数
-        function renderPdfFile(pdfData, container) {
-            pdfjsLib.getDocument({ data: pdfData }).promise.then(function(pdf) {
-                container.innerHTML = '';
+        // PDF渲染函数（增强容错）
+        function renderPdfFile(pdfData, container, currentProgress) {
+            if (typeof pdfjsLib === 'undefined') {
+                container.innerHTML = '<div class="file-not-supported">❌ PDF预览库加载失败</div>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                  <button class="settings-btn" onclick="openProgressModal(${currentProgress})">更新阅读进度</button>
+                </div>
+                <div class="loading-tip" style="display:block;">正在加载PDF...</div>
+            `;
+
+            pdfjsLib.getDocument({ 
+                data: pdfData,
+                cMapUrl: 'https://mozilla.github.io/pdf.js/cmaps/',
+                cMapPacked: true
+            }).promise.then(function(pdf) {
+                container.innerHTML = `
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                      <button class="settings-btn" onclick="openProgressModal(${currentProgress})">更新阅读进度</button>
+                    </div>
+                `;
+                
                 // 渲染第一页
                 pdf.getPage(1).then(function(page) {
-                    const scale = 1.5;
+                    const scale = 1.2;
                     const viewport = page.getViewport({ scale: scale });
                     
                     const canvas = document.createElement('canvas');
@@ -1076,20 +1252,86 @@
                     pdfContainer.appendChild(canvas);
                     
                     const pageInfo = document.createElement('div');
-                    pageInfo.textContent = `第 1 页 / 共 ${pdf.numPages} 页`;
+                    pageInfo.textContent = `第 1 页 / 共 ${pdf.numPages} 页 | 当前进度：${currentProgress}%`;
                     pdfContainer.appendChild(pageInfo);
                     
                     container.appendChild(pdfContainer);
                     
+                    // 渲染PDF
                     const renderContext = {
                         canvasContext: context,
                         viewport: viewport
                     };
                     page.render(renderContext);
+                }).catch(function(error) {
+                    container.innerHTML += `<div class="file-not-supported">❌ PDF页面渲染失败：${error.message}</div>`;
                 });
             }).catch(function(error) {
-                container.innerHTML = `<div class="file-not-supported">❌ PDF文件加载失败：${error.message}</div>`;
+                container.innerHTML = `
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                      <button class="settings-btn" onclick="openProgressModal(${currentProgress})">更新阅读进度</button>
+                    </div>
+                    <div class="file-not-supported">❌ PDF文件加载失败：${error.message}</div>
+                `;
             });
+        }
+
+        // 进度弹窗相关函数
+        function openProgressModal(initialValue) {
+            const progressModal = document.getElementById('progressModal');
+            const progressOverlay = document.getElementById('progressOverlay');
+            const progressSlider = document.getElementById('progressSlider');
+            const progressValue = document.getElementById('progressValue');
+            const progressModalTitle = document.getElementById('progressModalTitle');
+
+            // 设置弹窗内容
+            progressModalTitle.textContent = `更新《${currentFileInfo.title}》的阅读进度`;
+            progressSlider.value = initialValue;
+            progressValue.textContent = `已读：${initialValue}%`;
+
+            // 滑块事件
+            progressSlider.oninput = function() {
+                progressValue.textContent = `已读：${this.value}%`;
+            };
+
+            // 显示弹窗
+            progressModal.style.display = 'block';
+            progressOverlay.style.display = 'block';
+        }
+
+        function closeProgressModal() {
+            document.getElementById('progressModal').style.display = 'none';
+            document.getElementById('progressOverlay').style.display = 'none';
+        }
+
+        function saveReadingProgress(progress) {
+            const { section, title, key } = currentFileInfo;
+            
+            // 更新进度数据
+            readingProgress[key] = progress;
+            
+            // 更新contentData
+            contentData[section] = contentData[section].map(item => {
+                if (item.title === title) {
+                    return { ...item, progress: progress };
+                }
+                return item;
+            });
+            
+            // 保存到本地
+            saveAll();
+            
+            // 更新UI
+            const cards = document.querySelectorAll(`#${section}-grid .book-card`);
+            cards.forEach(card => {
+                if (card.dataset.title === title) {
+                    card.dataset.progress = progress;
+                    card.querySelector('.book-progress-fill').style.width = `${progress}%`;
+                    card.querySelector('.book-progress-text').textContent = `已读${progress}%`;
+                }
+            });
+            
+            alert(`进度已更新为：${progress}%`);
         }
 
         function closeFullscreenModal() {
@@ -1107,51 +1349,94 @@
             document.getElementById('resultModal').style.display = 'none';
         }
 
+        // 修复文件上传逻辑
         function handleFileUpload(input, sec) {
             const files = Array.from(input.files);
             if (!files.length) return;
-            document.getElementById(`${sec}-empty`).style.display = 'none';
+            
+            // 隐藏空提示
+            const emptyEl = document.getElementById(`${sec}-empty`);
+            if (emptyEl) emptyEl.style.display = 'none';
 
+            // 初始化数据结构
             if (!fileMetadata[sec]) fileMetadata[sec] = [];
             if (!contentData[sec]) contentData[sec] = [];
 
+            // 处理每个文件
             files.forEach(file => {
-                const name = file.name.split('.').slice(0,-1).join('.');
-                const full = file.name;
-                const size = (file.size/1024/1024).toFixed(2);
-                const key = `${sec}_${name}`;
-                uploadedFiles[key] = file; // 保存文件对象，用于后续预览
+                try {
+                    const name = file.name.split('.').slice(0,-1).join('.') || file.name;
+                    const full = file.name;
+                    const size = (file.size/1024/1024).toFixed(2);
+                    const key = `${sec}_${name}`;
+                    
+                    // 缓存文件对象（关键修复）
+                    uploadedFiles[key] = file;
 
-                if (!contentData[sec].some(x => x.title === name)) {
-                    contentData[sec].push({
-                        title: name, type: sec, timestamp: Date.now(), progress: 0
-                    });
-                }
-                if (!fileMetadata[sec].some(x => x.fullFileName === full)) {
-                    fileMetadata[sec].push({ fileName: name, fullFileName: full, fileSize: size, timestamp: Date.now() });
+                    // 添加到内容数据
+                    if (!contentData[sec].some(x => x.title === name)) {
+                        contentData[sec].push({
+                            title: name, 
+                            type: sec, 
+                            timestamp: Date.now(), 
+                            progress: readingProgress[key] || 0
+                        });
+                    }
+                    
+                    // 添加到文件元数据
+                    if (!fileMetadata[sec].some(x => x.fullFileName === full)) {
+                        fileMetadata[sec].push({ 
+                            fileName: name, 
+                            fullFileName: full, 
+                            fileSize: size, 
+                            timestamp: Date.now() 
+                        });
+                    }
+                } catch (e) {
+                    console.error('处理文件失败:', e);
+                    alert(`文件 ${file.name} 处理失败: ${e.message}`);
                 }
             });
 
+            // 保存并刷新UI
             saveAll();
             restoreAllData();
             bindBookCardClick(); // 重新绑定点击事件
             input.value = '';
-            alert(`上传成功`);
+            
+            alert(`成功上传 ${files.length} 个文件`);
         }
 
         function deleteUploadedFile(btn, sec, name, full) {
-            if (!confirm('删除文件？')) return;
+            if (!confirm('确定删除该文件？')) return;
+            
+            // 删除DOM元素
             btn.parentElement.remove();
+            
+            // 删除数据
+            const fileKey = `${sec}_${name}`;
             fileMetadata[sec] = (fileMetadata[sec] || []).filter(x => x.fullFileName !== full);
             contentData[sec] = (contentData[sec] || []).filter(x => x.title !== name);
-            delete uploadedFiles[`${sec}_${name}`]; // 删除缓存的文件对象
+            delete uploadedFiles[fileKey];
+            delete readingProgress[fileKey];
+            
+            // 保存并刷新
             saveAll();
             restoreAllData();
+            checkEmptyState(sec);
         }
 
-        function executeGlobalSearch() {}
-        function executeGlobalFilter() {}
+        // 占位函数（可后续扩展）
+        function executeGlobalSearch() {
+            alert('搜索功能暂未实现，即将上线');
+        }
+        
+        function executeGlobalFilter() {
+            alert('筛选功能暂未实现，即将上线');
+        }
+        
         window.renderPdfPage = function(){};
+        window.openProgressModal = openProgressModal;
     </script>
 </body>
 </html>
