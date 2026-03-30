@@ -939,31 +939,32 @@
             document.getElementById('portfolio-upload').onchange = e => handleFileUpload(e.target, 'portfolio');
             document.getElementById('topic-upload').onchange = e => handleFileUpload(e.target, 'topic');
             document.getElementById('dialog-upload').onchange = e => handleFileUpload(e.target, 'dialog');
-            document.getElementById('toggleSettings').onclick = () => settingsPanel.classList.toggle('active');
-            fontSizeSelect.onchange = updateReadingSettings;
-            bgColorSelect.onchange = updateReadingSettings;
-            lineHeightSelect.onchange = updateReadingSettings;
+            document.getElementById('toggleSettings').onclick = () => document.getElementById('settingsPanel').classList.toggle('active');
+            document.getElementById('fontSizeSelect').onchange = updateReadingSettings;
+            document.getElementById('bgColorSelect').onchange = updateReadingSettings;
+            document.getElementById('lineHeightSelect').onchange = updateReadingSettings;
         }
 
         function initReadingSettings() {
-            const inner = fullscreenContentInner;
+            const inner = document.getElementById('fullscreen-content-inner');
             inner.style.fontSize = '16px';
             inner.style.backgroundColor = '#fff';
             inner.style.lineHeight = '2';
         }
 
         function updateReadingSettings() {
-            const inner = fullscreenContentInner;
-            inner.style.fontSize = fontSizeSelect.value + 'px';
-            inner.style.backgroundColor = bgColorSelect.value;
-            inner.style.lineHeight = lineHeightSelect.value;
+            const inner = document.getElementById('fullscreen-content-inner');
+            inner.style.fontSize = document.getElementById('fontSizeSelect').value + 'px';
+            inner.style.backgroundColor = document.getElementById('bgColorSelect').value;
+            inner.style.lineHeight = document.getElementById('lineHeightSelect').value;
         }
 
         function bindBookCardClick() {
             document.querySelectorAll('.book-card').forEach(card => {
                 card.onclick = () => {
                     const sec = card.closest('.content-section').id;
-                    openFullscreenModal(sec, card);
+                    const title = card.dataset.title;
+                    openFullscreenModal(sec, title);
                 };
             });
         }
@@ -994,23 +995,116 @@
             empty.style.display = grid.children.length === 0 ? 'block' : 'none';
         }
 
-        function openFullscreenModal(type, el) {
+        // 重构全屏阅读函数，新增文件内容展示逻辑
+        function openFullscreenModal(section, title) {
+            const fullscreenModal = document.getElementById('fullscreenModal');
+            const contentInner = document.getElementById('fullscreen-content-inner');
             fullscreenModal.style.display = 'block';
+            contentInner.innerHTML = '';
+
+            // 获取对应的文件对象
+            const fileKey = `${section}_${title}`;
+            const file = uploadedFiles[fileKey];
+            
+            if (!file) {
+                contentInner.innerHTML = '<div class="file-not-supported">⚠️ 未找到该文件，请重新上传</div>';
+                return;
+            }
+
+            // 根据文件类型解析并展示内容
+            const fileType = file.type;
+            const reader = new FileReader();
+
+            // 文本类文件（txt、json、md等）
+            if (fileType.includes('text') || 
+                file.name.endsWith('.txt') || 
+                file.name.endsWith('.md') || 
+                file.name.endsWith('.json')) {
+                reader.onload = function(e) {
+                    contentInner.innerHTML = `<div class="file-content">${e.target.result}</div>`;
+                };
+                reader.readAsText(file);
+            }
+            // PDF文件
+            else if (fileType.includes('pdf') || file.name.endsWith('.pdf')) {
+                contentInner.innerHTML = '<div class="loading-tip" style="display:block;">正在加载PDF文件...</div>';
+                reader.onload = function(e) {
+                    const pdfData = new Uint8Array(e.target.result);
+                    renderPdfFile(pdfData, contentInner);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 图片文件
+            else if (fileType.includes('image')) {
+                reader.onload = function(e) {
+                    contentInner.innerHTML = `
+                        <div class="image-preview-container">
+                            <img src="${e.target.result}" class="image-preview" alt="${title}">
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+            // 不支持的文件类型
+            else {
+                contentInner.innerHTML = `
+                    <div class="file-not-supported">
+                        ❌ 暂不支持预览该类型文件 (${fileType})<br>
+                        文件名称：${file.name}<br>
+                        文件大小：${(file.size/1024/1024).toFixed(2)}MB
+                    </div>
+                `;
+            }
+        }
+
+        // PDF文件渲染函数
+        function renderPdfFile(pdfData, container) {
+            pdfjsLib.getDocument({ data: pdfData }).promise.then(function(pdf) {
+                container.innerHTML = '';
+                // 渲染第一页
+                pdf.getPage(1).then(function(page) {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    const pdfContainer = document.createElement('div');
+                    pdfContainer.className = 'pdf-preview-container';
+                    pdfContainer.appendChild(canvas);
+                    
+                    const pageInfo = document.createElement('div');
+                    pageInfo.textContent = `第 1 页 / 共 ${pdf.numPages} 页`;
+                    pdfContainer.appendChild(pageInfo);
+                    
+                    container.appendChild(pdfContainer);
+                    
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            }).catch(function(error) {
+                container.innerHTML = `<div class="file-not-supported">❌ PDF文件加载失败：${error.message}</div>`;
+            });
         }
 
         function closeFullscreenModal() {
-            fullscreenModal.style.display = 'none';
+            document.getElementById('fullscreenModal').style.display = 'none';
         }
 
         function openResultModal(type) {
-            resultModal.style.display = 'block';
-            modalTitle.textContent = type === 'search' ? '全局搜索' : '全局筛选';
-            searchArea.style.display = type === 'search' ? 'block' : 'none';
-            filterArea.style.display = type === 'filter' ? 'block' : 'none';
+            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('modalTitle').textContent = type === 'search' ? '全局搜索' : '全局筛选';
+            document.getElementById('searchArea').style.display = type === 'search' ? 'block' : 'none';
+            document.getElementById('filterArea').style.display = type === 'filter' ? 'block' : 'none';
         }
 
         function closeResultModal() {
-            resultModal.style.display = 'none';
+            document.getElementById('resultModal').style.display = 'none';
         }
 
         function handleFileUpload(input, sec) {
@@ -1026,7 +1120,7 @@
                 const full = file.name;
                 const size = (file.size/1024/1024).toFixed(2);
                 const key = `${sec}_${name}`;
-                uploadedFiles[key] = file;
+                uploadedFiles[key] = file; // 保存文件对象，用于后续预览
 
                 if (!contentData[sec].some(x => x.title === name)) {
                     contentData[sec].push({
@@ -1040,7 +1134,7 @@
 
             saveAll();
             restoreAllData();
-            bindBookCardClick();
+            bindBookCardClick(); // 重新绑定点击事件
             input.value = '';
             alert(`上传成功`);
         }
@@ -1050,7 +1144,7 @@
             btn.parentElement.remove();
             fileMetadata[sec] = (fileMetadata[sec] || []).filter(x => x.fullFileName !== full);
             contentData[sec] = (contentData[sec] || []).filter(x => x.title !== name);
-            delete uploadedFiles[`${sec}_${name}`];
+            delete uploadedFiles[`${sec}_${name}`]; // 删除缓存的文件对象
             saveAll();
             restoreAllData();
         }
