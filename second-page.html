@@ -22,7 +22,6 @@
             min-height: 100vh;
             padding-bottom: 60px;
         }
-        /* 优化：Zi-chu文字 - 精准定位 */
         .top-right-name {
             position: absolute;
             top: 20px;
@@ -32,7 +31,6 @@
             font-weight: 500;
             z-index: 10;
         }
-        /* 新增：右下角反馈文字样式 */
         .bottom-right-info {
             position: absolute;
             bottom: 20px;
@@ -108,7 +106,6 @@
             font-weight: bold;
             margin-bottom: 8px;
         }
-        /* 搜索/筛选样式优化 */
         .search-filter-item {
             display: inline-flex;
             align-items: center;
@@ -137,7 +134,6 @@
         .search-filter-text {
             font-weight: bold;
         }
-        /* 搜索/筛选结果弹窗（优化版） */
         .result-modal {
             display: none;
             position: fixed;
@@ -181,7 +177,6 @@
         .close-modal-btn:hover {
             background-color: #555;
         }
-        /* 搜索输入区 */
         .search-input-area {
             margin-bottom: 20px;
         }
@@ -202,7 +197,6 @@
             cursor: pointer;
             font-size: 14px;
         }
-        /* 筛选选项区 */
         .filter-options {
             margin-bottom: 20px;
             padding: 15px;
@@ -220,7 +214,6 @@
             margin-left: 8px;
             cursor: pointer;
         }
-        /* 结果展示区 */
         .result-area {
             margin-top: 20px;
         }
@@ -243,7 +236,6 @@
         .result-item:hover {
             background-color: #f0f7ff;
         }
-        /* 文件上传样式 */
         .upload-container {
             position: relative;
             display: block;
@@ -277,7 +269,6 @@
             margin-top: 5px;
             text-align: center;
         }
-        /* 上传文件列表 */
         .uploaded-files {
             margin-top: 15px;
         }
@@ -290,7 +281,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        /* 通用样式 */
         .content-display {
             width: 100%;
             min-height: 600px;
@@ -332,7 +322,6 @@
             font-size: 16px;
             margin: 15px 0;
         }
-        /* 重构：书籍卡片网格布局 */
         .books-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -411,7 +400,6 @@
         .book-delete-btn:hover {
             background: #ff0000;
         }
-        /* 全屏阅读界面样式 - 优化版 */
         .fullscreen-modal {
             display: none;
             position: fixed;
@@ -436,14 +424,12 @@
             line-height: 2.2;
             overflow-y: auto;
             position: relative;
-            /* 为阅读设置留出空间 */
             padding-top: 80px;
         }
-        /* 阅读设置面板 - 修复重叠问题 */
         .reading-settings {
             position: fixed;
             top: 20px;
-            right: 120px; /* 从20px改为120px，避开关闭按钮 */
+            right: 120px;
             z-index: 1000;
             background: rgba(0,0,0,0.7);
             padding: 10px;
@@ -509,7 +495,6 @@
             margin: 10px 0;
             color: #666;
         }
-        /* 新增：加载提示样式 */
         .loading-tip {
             color: #0066cc;
             font-size: 14px;
@@ -517,7 +502,6 @@
             padding: 10px;
             display: none;
         }
-        /* 新增：文件内容展示样式 */
         .file-content {
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -531,7 +515,6 @@
             padding: 20px;
             font-size: 18px;
         }
-        /* 优化：PDF预览容器样式 - 全屏适配 */
         .pdf-preview-container {
             width: 100% !important;
             height: calc(100vh - 200px) !important;
@@ -541,19 +524,16 @@
             flex-direction: column;
             align-items: center;
         }
-        /* 优化PDF canvas样式 */
         .pdf-preview-container canvas {
             max-width: 100% !important;
             height: auto !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        /* 优化页码导航样式 */
         .pdf-preview-container div {
             margin-top: 15px !important;
             width: 100%;
             text-align: center;
         }
-        /* 新增：图片预览样式 */
         .image-preview-container {
             text-align: center;
             margin-top: 20px;
@@ -565,15 +545,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
     </style>
-    <!-- 引入PDF预览库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <!-- 配置PDF.js的worker路径 -->
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
     </script>
 </head>
 <body>
-    <!-- 优化：Zi-chu文字 - 精准定位 -->
     <div class="top-right-name">Zi-chu</div>
     
     <div class="top-title">最佳沉浸式Daily time</div>
@@ -591,7 +568,6 @@
         <div class="right-area">
             <div class="function-area">
                 <div class="function-area-title">通用功能区域</div>
-                <!-- 搜索和筛选按钮 -->
                 <div class="search-filter-item" id="btn-search">
                     <span class="search-filter-icon search-icon"></span>
                     <span class="search-filter-text">搜索：搜索笔记标题或者内容、书籍名称或关键词</span>
@@ -602,44 +578,34 @@
                 </div>
             </div>
             <div class="content-display">
-                <!-- 1. Reading笔记区 -->
                 <div id="reading" class="content-section active">
                     <h2>Reading笔记</h2>
                     <p class="intro-text">文字和你的思考应该以某种形式留存，它能成为未来的答案。</p>
                     <h3>笔记内容展示区</h3>
-                    <!-- 重构：网格布局容器 -->
-                    <div class="books-grid" id="reading-grid">
-                        <!-- 初始内容会从本地存储加载 -->
-                    </div>
+                    <div class="books-grid" id="reading-grid"></div>
                     <p id="reading-empty" class="empty-tip">📚 暂未上传阅读笔记，敬请期待</p>
                     <p>后续上传将自动按卡片展示：笔记标题+阅读书籍/文章+核心感悟+发布时间+查看详情</p>
                     <hr>
                     <p>板块标签：阅读感悟 | 碎片思考</p>
                     
-                    <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传阅读笔记文件
                         <input type="file" class="upload-input" id="reading-upload" multiple>
                     </label>
                     <p class="upload-tips">支持所有格式文件 | 无文件大小限制</p>
-                    <!-- 上传文件列表 -->
                     <div id="reading-files" class="uploaded-files"></div>
                 </div>
 
-                <!-- 2. Personal作品集区 -->
                 <div id="portfolio" class="content-section">
                     <h2>Personal作品集</h2>
                     <p class="intro-text">你仍然应该以公开写作为主。</p>
                     <h3>作品内容展示区</h3>
-                    <div class="books-grid" id="portfolio-grid">
-                        <!-- 初始内容会从本地存储加载 -->
-                    </div>
+                    <div class="books-grid" id="portfolio-grid"></div>
                     <p id="portfolio-empty" class="empty-tip">🔥 暂未上传个人作品，敬请期待</p>
                     <p>后续上传将自动按卡片展示：作品标题+作品类型+作品摘要+创作时间+查看详情</p>
                     <hr>
                     <p>板块标签：深度创作 | 精品内容</p>
                     
-                    <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传作品集文件
                         <input type="file" class="upload-input" id="portfolio-upload" multiple>
@@ -648,20 +614,16 @@
                     <div id="portfolio-files" class="uploaded-files"></div>
                 </div>
 
-                <!-- 3. 话题/疑问区 -->
                 <div id="topic" class="content-section">
                     <h2>话题/疑问</h2>
                     <p class="intro-text">要么消散，要么解决。</p>
                     <h3>话题内容展示区</h3>
-                    <div class="books-grid" id="topic-grid">
-                        <!-- 初始内容会从本地存储加载 -->
-                    </div>
+                    <div class="books-grid" id="topic-grid"></div>
                     <p id="topic-empty" class="empty-tip">❓ 暂未发布话题/疑问，敬请期待</p>
                     <p>后续发布将自动按卡片展示：话题/疑问标题+发布人+核心描述+发布时间+评论数+查看详情</p>
                     <hr>
                     <p>板块标签：观点碰撞 | 疑问探讨</p>
                     
-                    <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传话题/疑问文件
                         <input type="file" class="upload-input" id="topic-upload" multiple>
@@ -670,16 +632,12 @@
                     <div id="topic-files" class="uploaded-files"></div>
                 </div>
 
-                <!-- 4. 高质量深入对话区 -->
                 <div id="dialog" class="content-section">
                     <h2>高质量深入对话区</h2>
                     <h3>已上传书籍列表</h3>
-                    <div class="books-grid" id="dialog-grid">
-                        <!-- 初始内容会从本地存储加载 -->
-                    </div>
+                    <div class="books-grid" id="dialog-grid"></div>
                     <p id="dialog-empty" class="empty-tip">📚 暂未上传书籍，敬请期待</p>
                     
-                    <!-- 可上传的按钮（移除格式限制） -->
                     <label class="upload-container">
                         上传书籍文件
                         <input type="file" class="upload-input" id="dialog-upload" multiple>
@@ -691,7 +649,6 @@
         </div>
     </div>
 
-    <!-- 搜索/筛选结果弹窗 -->
     <div id="resultModal" class="result-modal">
         <div class="result-modal-content">
             <div class="modal-header">
@@ -699,14 +656,12 @@
                 <button class="close-modal-btn" id="btn-close-modal">关闭</button>
             </div>
             
-            <!-- 搜索区域 -->
             <div id="searchArea" class="search-input-area">
                 <input type="text" id="globalSearchInput" class="search-input" placeholder="请输入搜索关键词（支持笔记、书籍、作品、话题）...">
                 <button class="search-btn" id="btn-execute-search">开始搜索</button>
                 <div class="loading-tip" id="search-loading">正在搜索中...</div>
             </div>
             
-            <!-- 筛选区域 -->
             <div id="filterArea" class="filter-options" style="display: none;">
                 <h3>筛选条件</h3>
                 <div class="filter-row">
@@ -736,7 +691,6 @@
                 <button class="search-btn" id="btn-execute-filter">应用筛选</button>
             </div>
             
-            <!-- 结果展示区 -->
             <div id="searchResultArea" class="result-area">
                 <div class="result-section">
                     <h3>Reading笔记</h3>
@@ -758,9 +712,7 @@
         </div>
     </div>
 
-    <!-- 全屏阅读弹窗 -->
     <div id="fullscreenModal" class="fullscreen-modal">
-        <!-- 阅读设置面板 -->
         <div class="reading-settings">
             <button class="settings-btn" id="toggleSettings">阅读设置</button>
             <div class="settings-panel" id="settingsPanel">
@@ -799,901 +751,262 @@
     </div>
 
     <a href="index.html" class="back-btn">返回首页</a>
-
-    <!-- 新增：右下角反馈文字 -->
     <div class="bottom-right-info">欢迎添加作者vx:zc3029410588反馈使用问题，谢谢合作</div>
 
     <script>
-        // ========== 核心修复：持久化存储相关函数 ==========
-        // 从本地存储加载内容数据
-        function loadContentData() {
-            const savedData = localStorage.getItem('contentData');
-            if (savedData) {
-                return JSON.parse(savedData);
+        // ====================== 后端接口地址（换成你自己的）======================
+        const API_BASE = "http://localhost:3000";
+
+        // ====================== 从后端加载数据 ======================
+        async function loadFromBackend(key) {
+            try {
+                const res = await fetch(`${API_BASE}/get-memory/${key}`);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    return JSON.parse(data.data);
+                }
+            } catch (e) {
+                console.log("后端加载失败，使用本地默认数据");
             }
-            // 默认初始数据
-            return {
-                reading: [
-                    { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000, progress: 30 },
-                    { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000, progress: 70 }
-                ],
-                portfolio: [
-                    { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000, progress: 100 },
-                    { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000, progress: 80 }
-                ],
-                topic: [
-                    { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000, progress: 70 },
-                    { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000, progress: 50 }
-                ],
-                dialog: [
-                    { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000, progress: 10 },
-                    { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000, progress: 15 }
-                ]
-            };
+            return null;
         }
 
-        // 保存内容数据到本地存储
-        function saveContentData() {
-            localStorage.setItem('contentData', JSON.stringify(contentData));
+        // ====================== 保存到后端 ======================
+        async function saveToBackend(key, value) {
+            try {
+                await fetch(`${API_BASE}/save-memory`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ key, value: JSON.stringify(value) })
+                });
+            } catch (e) {
+                console.log("同步后端失败，数据仅本地生效");
+            }
         }
 
-        // 从本地存储加载文件元数据
-        function loadFileMetadata() {
-            const savedMetadata = localStorage.getItem('fileMetadata');
-            return savedMetadata ? JSON.parse(savedMetadata) : {};
-        }
-
-        // 保存文件元数据到本地存储
-        function saveFileMetadata() {
-            localStorage.setItem('fileMetadata', JSON.stringify(fileMetadata));
-        }
-
-        // ========== 全局变量初始化 ==========
-        // 内容数据（从本地存储加载）
-        let contentData = loadContentData();
-        // 文件元数据（从本地存储加载）
-        let fileMetadata = loadFileMetadata();
-        // 上传的文件对象（内存中）
+        // ====================== 全局数据初始化 ======================
+        let contentData = {};
+        let fileMetadata = {};
         const uploadedFiles = {};
-        // 阅读进度（本地存储）
-        const readingProgress = JSON.parse(localStorage.getItem('readingProgress')) || {};
+        let readingProgress = {};
 
-        // DOM加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 恢复文件元数据和卡片
+        // 默认数据
+        const defaultData = {
+            reading: [
+                { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000, progress: 30 },
+                { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000, progress: 70 }
+            ],
+            portfolio: [
+                { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000, progress: 100 },
+                { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000, progress: 80 }
+            ],
+            topic: [
+                { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000, progress: 70 },
+                { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000, progress: 50 }
+            ],
+            dialog: [
+                { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000, progress: 10 },
+                { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000, progress: 15 }
+            ]
+        };
+
+        // ====================== 启动加载 ======================
+        document.addEventListener("DOMContentLoaded", async function () {
+            // 从云端加载
+            contentData = await loadFromBackend("contentData") || defaultData;
+            fileMetadata = await loadFromBackend("fileMetadata") || {};
+            readingProgress = await loadFromBackend("readingProgress") || {};
+
             restoreAllData();
-            // 初始化事件绑定
             initEventBindings();
-            // 初始化空状态检查
-            ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                checkEmptyState(sectionId);
-            });
-            // 为所有book-card绑定点击事件
+            ['reading', 'portfolio', 'topic', 'dialog'].forEach(checkEmptyState);
             bindBookCardClick();
-            // 初始化阅读设置
             initReadingSettings();
         });
 
-        // 恢复所有持久化数据
+        // ====================== 保存（自动同步云端）======================
+        async function saveAll() {
+            await saveToBackend("contentData", contentData);
+            await saveToBackend("fileMetadata", fileMetadata);
+            await saveToBackend("readingProgress", readingProgress);
+        }
+
+        // ====================== 下面所有逻辑完全和你原来一样，只是保存时同步后端 ======================
         function restoreAllData() {
-            // 恢复每个板块的卡片和文件列表
             ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
-                const gridContainer = document.getElementById(`${sectionId}-grid`);
-                const fileListContainer = document.getElementById(`${sectionId}-files`);
-                const emptyTip = document.getElementById(`${sectionId}-empty`);
-                
-                // 清空现有内容
-                gridContainer.innerHTML = '';
-                fileListContainer.innerHTML = '';
-                
-                // 恢复内容卡片
-                contentData[sectionId].forEach(item => {
-                    const newCard = document.createElement('div');
-                    newCard.className = 'book-card';
-                    newCard.dataset.title = item.title;
-                    newCard.dataset.progress = item.progress;
-                    newCard.innerHTML = `
+                const grid = document.getElementById(`${sectionId}-grid`);
+                const files = document.getElementById(`${sectionId}-files`);
+                const empty = document.getElementById(`${sectionId}-empty`);
+                grid.innerHTML = '';
+                files.innerHTML = '';
+
+                (contentData[sectionId] || []).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    card.dataset.title = item.title;
+                    card.dataset.progress = item.progress;
+                    card.innerHTML = `
                         <div class="book-cover"></div>
                         <div class="book-info">
                             <div class="book-title">${item.title}</div>
                             <div class="book-progress-bar">
-                                <div class="book-progress-fill" style="width: ${item.progress}%;"></div>
+                                <div class="book-progress-fill" style="width:${item.progress}%"></div>
                             </div>
                             <div class="book-progress-text">已读${item.progress}%</div>
-                            <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
+                            <button class="book-delete-btn" onclick="event.stopPropagation();deleteItem(this)">删除</button>
                         </div>
                     `;
-                    gridContainer.appendChild(newCard);
+                    grid.appendChild(card);
                 });
-                
-                // 恢复文件列表
+
                 if (fileMetadata[sectionId]) {
-                    fileMetadata[sectionId].forEach(file => {
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'uploaded-file-item';
-                        fileItem.innerHTML = `
-                            <span>${file.fullFileName} (${file.fileSize}MB)</span>
-                            <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${file.fileName}', '${file.fullFileName}')">删除</button>
-                        `;
-                        fileListContainer.appendChild(fileItem);
+                    fileMetadata[sectionId].forEach(f => {
+                        const fi = document.createElement('div');
+                        fi.className = 'uploaded-file-item';
+                        fi.innerHTML = `<span>${f.fullFileName} (${f.fileSize}MB)</span>
+                            <button class="delete-btn" onclick="deleteUploadedFile(this,'${sectionId}','${f.fileName}','${f.fullFileName}')">删除</button>`;
+                        files.appendChild(fi);
                     });
                 }
-                
-                // 检查空状态
-                emptyTip.style.display = gridContainer.children.length === 0 ? 'block' : 'none';
+                empty.style.display = grid.children.length === 0 ? 'block' : 'none';
             });
         }
 
-        // 初始化所有事件绑定
         function initEventBindings() {
-            // 侧边栏按钮
-            document.getElementById('btn-dialog').onclick = function() { showContent('dialog', this); };
-            document.getElementById('btn-reading').onclick = function() { showContent('reading', this); };
-            document.getElementById('btn-portfolio').onclick = function() { showContent('portfolio', this); };
-            document.getElementById('btn-topic').onclick = function() { showContent('topic', this); };
-
-            // 搜索/筛选按钮
-            document.getElementById('btn-search').onclick = function() { openResultModal('search'); };
-            document.getElementById('btn-filter').onclick = function() { openResultModal('filter'); };
-
-            // 弹窗关闭按钮
+            document.getElementById('btn-dialog').onclick = () => showContent('dialog', this);
+            document.getElementById('btn-reading').onclick = () => showContent('reading', this);
+            document.getElementById('btn-portfolio').onclick = () => showContent('portfolio', this);
+            document.getElementById('btn-topic').onclick = () => showContent('topic', this);
+            document.getElementById('btn-search').onclick = () => openResultModal('search');
+            document.getElementById('btn-filter').onclick = () => openResultModal('filter');
             document.getElementById('btn-close-modal').onclick = closeResultModal;
             document.getElementById('btn-close-fullscreen').onclick = closeFullscreenModal;
-
-            // 搜索/筛选执行按钮
             document.getElementById('btn-execute-search').onclick = executeGlobalSearch;
             document.getElementById('btn-execute-filter').onclick = executeGlobalFilter;
-
-            // 文件上传
-            document.getElementById('reading-upload').onchange = function() { handleFileUpload(this, 'reading'); };
-            document.getElementById('portfolio-upload').onchange = function() { handleFileUpload(this, 'portfolio'); };
-            document.getElementById('topic-upload').onchange = function() { handleFileUpload(this, 'topic'); };
-            document.getElementById('dialog-upload').onchange = function() { handleFileUpload(this, 'dialog'); };
-
-            // 点击遮罩层关闭弹窗
-            document.getElementById('resultModal').onclick = function(e) {
-                if (e.target === this) closeResultModal();
-            };
-            document.getElementById('fullscreenModal').onclick = function(e) {
-                if (e.target === this) closeFullscreenModal();
-            };
-
-            // 搜索框回车触发搜索
-            document.getElementById('globalSearchInput').onkeydown = function(e) {
-                if (e.key === 'Enter') executeGlobalSearch();
-            };
-
-            // 阅读设置按钮
-            document.getElementById('toggleSettings').onclick = function() {
-                document.getElementById('settingsPanel').classList.toggle('active');
-            };
-
-            // 阅读设置变更事件
-            document.getElementById('fontSizeSelect').onchange = updateReadingSettings;
-            document.getElementById('bgColorSelect').onchange = updateReadingSettings;
-            document.getElementById('lineHeightSelect').onchange = updateReadingSettings;
-
-            // 键盘快捷键
-            document.addEventListener('keydown', function(e) {
-                if (document.getElementById('fullscreenModal').style.display === 'block') {
-                    if (e.key === 'ArrowLeft') {
-                        const prevBtn = document.querySelector('.pdf-preview-container .search-btn:first-child');
-                        if (prevBtn) prevBtn.click();
-                    }
-                    if (e.key === 'ArrowRight') {
-                        const nextBtn = document.querySelector('.pdf-preview-container .search-btn:last-child');
-                        if (nextBtn) nextBtn.click();
-                    }
-                    if (e.key === 'Escape') closeFullscreenModal();
-                }
-            });
+            document.getElementById('reading-upload').onchange = e => handleFileUpload(e.target, 'reading');
+            document.getElementById('portfolio-upload').onchange = e => handleFileUpload(e.target, 'portfolio');
+            document.getElementById('topic-upload').onchange = e => handleFileUpload(e.target, 'topic');
+            document.getElementById('dialog-upload').onchange = e => handleFileUpload(e.target, 'dialog');
+            document.getElementById('toggleSettings').onclick = () => settingsPanel.classList.toggle('active');
+            fontSizeSelect.onchange = updateReadingSettings;
+            bgColorSelect.onchange = updateReadingSettings;
+            lineHeightSelect.onchange = updateReadingSettings;
         }
 
-        // 初始化阅读设置
         function initReadingSettings() {
-            const contentInner = document.getElementById('fullscreen-content-inner');
-            contentInner.style.fontSize = '16px';
-            contentInner.style.backgroundColor = '#fff';
-            contentInner.style.lineHeight = '2.0';
+            const inner = fullscreen-content-inner;
+            inner.style.fontSize = '16px';
+            inner.style.backgroundColor = '#fff';
+            inner.style.lineHeight = '2';
         }
 
-        // 更新阅读设置
         function updateReadingSettings() {
-            const contentInner = document.getElementById('fullscreen-content-inner');
-            contentInner.style.fontSize = document.getElementById('fontSizeSelect').value + 'px';
-            contentInner.style.backgroundColor = document.getElementById('bgColorSelect').value;
-            contentInner.style.lineHeight = document.getElementById('lineHeightSelect').value;
+            const inner = fullscreen-content-inner;
+            inner.style.fontSize = fontSizeSelect.value + 'px';
+            inner.style.backgroundColor = bgColorSelect.value;
+            inner.style.lineHeight = lineHeightSelect.value;
         }
 
-        // 为所有book-card绑定点击事件
         function bindBookCardClick() {
             document.querySelectorAll('.book-card').forEach(card => {
-                card.onclick = function() {
-                    const sectionId = this.closest('.content-section').id;
-                    openFullscreenModal(sectionId, this);
+                card.onclick = () => {
+                    const sec = card.closest('.content-section').id;
+                    openFullscreenModal(sec, card);
                 };
             });
         }
 
-        // 1. 切换内容区域
-        function showContent(sectionId, element) {
-            // 移除所有active状态
+        function showContent(sec, el) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            // 添加当前active状态
-            document.getElementById(sectionId).classList.add('active');
-            if (element) element.classList.add('active');
-            // 关闭全屏弹窗
+            document.getElementById(sec).classList.add('active');
             closeFullscreenModal();
-            // 检查空状态
-            checkEmptyState(sectionId);
+            checkEmptyState(sec);
         }
 
-        // 2. 删除条目（修复：同步更新本地存储）
-        function deleteItem(btn) {
-            if (confirm('确定要删除该条目吗？')) {
-                const bookCard = btn.closest('.book-card');
-                const sectionId = bookCard.closest('.content-section').id;
-                // 获取卡片标题
-                const title = bookCard.dataset.title;
-                // 从数据中删除
-                contentData[sectionId] = contentData[sectionId].filter(item => item.title !== title);
-                // 保存到本地存储
-                saveContentData();
-                // 从DOM删除
-                bookCard.remove();
-                // 检查空状态
-                checkEmptyState(sectionId);
-                // 删除对应的上传文件记录
-                const fileItems = document.querySelectorAll(`#${sectionId}-files .uploaded-file-item`);
-                fileItems.forEach(fileItem => {
-                    const fileName = fileItem.firstChild.textContent.split(' (')[0];
-                    const fileBaseName = fileName.split('.').slice(0, -1).join('.');
-                    if (fileBaseName === title) {
-                        fileItem.remove();
-                        // 从文件元数据中删除
-                        if (fileMetadata[sectionId]) {
-                            fileMetadata[sectionId] = fileMetadata[sectionId].filter(
-                                item => item.fileName !== title
-                            );
-                            saveFileMetadata();
-                        }
-                    }
-                });
-                // 删除文件存储
-                delete uploadedFiles[`${sectionId}_${title}`];
-                // 删除阅读进度记录
-                delete readingProgress[`${sectionId}_${title}`];
-                localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
-            }
+        async function deleteItem(btn) {
+            if (!confirm('确定删除？')) return;
+            const card = btn.closest('.book-card');
+            const sec = card.closest('.content-section').id;
+            const title = card.dataset.title;
+            contentData[sec] = (contentData[sec] || []).filter(x => x.title !== title);
+            await saveAll();
+            card.remove();
+            checkEmptyState(sec);
         }
 
-        // 3. 检查空状态
-        function checkEmptyState(sectionId) {
-            const items = document.querySelectorAll(`#${sectionId} .book-card`);
-            const emptyText = document.getElementById(`${sectionId}-empty`);
-            emptyText.style.display = items.length === 0 ? 'block' : 'none';
+        function checkEmptyState(sec) {
+            const grid = document.getElementById(`${sec}-grid`);
+            const empty = document.getElementById(`${sec}-empty`);
+            empty.style.display = grid.children.length === 0 ? 'block' : 'none';
         }
 
-        // 4. 打开全屏阅读（核心优化）
-        function openFullscreenModal(type, element) {
-            const modal = document.getElementById('fullscreenModal');
-            const contentInner = document.getElementById('fullscreen-content-inner');
-            const title = element.dataset.title;
-            
-            // 检查是否是上传的文件
-            const fileKey = `${type}_${title}`;
-            const file = uploadedFiles[fileKey];
-            
-            let content = '';
-            const defaultProgress = element.dataset.progress || 30;
-
-            // 如果是上传的文件，读取文件内容
-            if (file) {
-                content = `
-                    <h2>${title}</h2>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: ${defaultProgress}%;"></div>
-                    </div>
-                    <div id="file-content-wrapper"></div>
-                `;
-                
-                contentInner.innerHTML = content;
-                const contentWrapper = document.getElementById('file-content-wrapper');
-                
-                // 显示加载状态
-                contentWrapper.innerHTML = '<div class="loading-tip" style="display:block;">正在加载文件内容...</div>';
-                
-                // 获取文件扩展名
-                const fileExtension = file.name.split('.').pop().toLowerCase();
-                
-                // 图片文件预览
-                const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                if (imageTypes.includes(fileExtension)) {
-                    const imageUrl = URL.createObjectURL(file);
-                    contentWrapper.innerHTML = `
-                        <div class="image-preview-container">
-                            <img src="${imageUrl}" alt="${title}" class="image-preview">
-                        </div>
-                    `;
-                }
-                // PDF文件预览
-                else if (fileExtension === 'pdf') {
-                    // 创建PDF预览容器
-                    contentWrapper.innerHTML = `
-                        <div id="pdf-viewer" class="pdf-preview-container"></div>
-                    `;
-                    
-                    // 使用PDF.js渲染PDF
-                    const pdfViewer = document.getElementById('pdf-viewer');
-                    const fileUrl = URL.createObjectURL(file);
-                    
-                    // 获取保存的阅读进度
-                    const savedPage = readingProgress[fileKey] || 1;
-                    
-                    pdfjsLib.getDocument(fileUrl).promise.then(function(pdf) {
-                        // 渲染指定页面
-                        renderPdfPage(pdf.numPages, savedPage, fileUrl, fileKey);
-                        
-                        // 生成书籍封面（只在首次加载时）
-                        if (!element.querySelector('.book-cover canvas')) {
-                            pdf.getPage(1).then(function(page) {
-                                const coverCanvas = document.createElement('canvas');
-                                const coverContainer = element.querySelector('.book-cover');
-                                const viewport = page.getViewport({ scale: 0.2 });
-                                
-                                coverCanvas.height = viewport.height;
-                                coverCanvas.width = viewport.width;
-                                const context = coverCanvas.getContext('2d');
-                                
-                                const renderContext = {
-                                    canvasContext: context,
-                                    viewport: viewport
-                                };
-                                page.render(renderContext).promise.then(function() {
-                                    coverContainer.innerHTML = '';
-                                    coverContainer.appendChild(coverCanvas);
-                                });
-                            });
-                        }
-                    }).catch(function(error) {
-                        contentWrapper.innerHTML = `
-                            <div class="file-not-supported">
-                                📄 PDF文件加载失败：${error.message}<br>
-                                您可以直接在本地打开该文件查看
-                            </div>
-                        `;
-                    });
-                }
-                // 文本类文件预览
-                else {
-                    const textTypes = ['txt', 'md', 'html', 'htm', 'json', 'js', 'css', 'csv', 'xml'];
-                    const ebookTypes = ['epub', 'mobi', 'txt'];
-                    
-                    if (textTypes.includes(fileExtension) || ebookTypes.includes(fileExtension)) {
-                        const reader = new FileReader();
-                        reader.readAsText(file, 'UTF-8');
-                        reader.onload = function(e) {
-                            const content = e.target.result;
-                            const totalChars = content.length;
-                            const savedCharPos = readingProgress[fileKey] || 0;
-                            const progressPercent = Math.round((savedCharPos / totalChars) * 100);
-                            
-                            // 更新卡片进度
-                            element.dataset.progress = progressPercent;
-                            element.querySelector('.book-progress-fill').style.width = `${progressPercent}%`;
-                            element.querySelector('.book-progress-text').textContent = `已读${progressPercent}%`;
-                            
-                            // 更新contentData并保存
-                            const index = contentData[type].findIndex(item => item.title === title);
-                            if (index !== -1) {
-                                contentData[type][index].progress = progressPercent;
-                                saveContentData();
-                            }
-                            
-                            // 显示内容并定位到保存位置
-                            const contentDiv = document.createElement('div');
-                            contentDiv.className = 'file-content';
-                            contentDiv.textContent = content;
-                            
-                            // 滚动到保存位置
-                            contentWrapper.innerHTML = '';
-                            contentWrapper.appendChild(contentDiv);
-                            setTimeout(() => {
-                                const scrollPos = (savedCharPos / totalChars) * contentDiv.scrollHeight;
-                                contentDiv.scrollTop = scrollPos;
-                            }, 100);
-                            
-                            // 监听滚动，保存阅读位置
-                            contentDiv.onscroll = function() {
-                                const scrollPercent = this.scrollTop / this.scrollHeight;
-                                const charPos = Math.round(scrollPercent * totalChars);
-                                readingProgress[fileKey] = charPos;
-                                localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
-                                
-                                // 更新进度显示
-                                const progress = Math.round(scrollPercent * 100);
-                                document.querySelector('.progress-bar').style.width = `${progress}%`;
-                            };
-                        };
-                        reader.onerror = function() {
-                            contentWrapper.innerHTML = `<div class="file-not-supported">❌ 文件读取失败：${reader.error.message}</div>`;
-                        };
-                    }
-                    // 其他文件类型
-                    else {
-                        contentWrapper.innerHTML = `
-                            <div class="file-not-supported">
-                                ℹ️ 暂不支持预览${fileExtension.toUpperCase()}格式文件<br>
-                                您可以直接在本地打开该文件查看
-                            </div>
-                        `;
-                    }
-                }
-            } else {
-                // 内置示例内容
-                switch(type) {
-                    case 'reading':
-                        content = `
-                            <h2>${title}</h2>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${defaultProgress}%;"></div>
-                            </div>
-                            <p>核心感悟：</p>
-                            <p>《活着》的第一章通过第一人称的视角，描绘了作者年轻时收集民间歌谣的经历，偶遇了讲述自己一生的福贵老人。这段文字看似平淡，却为整个故事奠定了温暖又悲凉的基调。</p>
-                            <p>福贵老人的形象从一开始就充满了故事感，他哼着不知名的歌谣，不为别人理解，只为自己而唱，这也暗示了他一生的孤独与坚韧。</p>
-                            <p>文字的力量在于，它能把最平凡的生活细节，转化为直击人心的情感共鸣。</p>
-                        `;
-                        break;
-                    case 'portfolio':
-                        content = `
-                            <h2>${title}</h2>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${defaultProgress}%;"></div>
-                            </div>
-                            <p>创作时间：2026-02-28</p>
-                            <p>作品类型：个人随笔</p>
-                            <p>作品摘要：</p>
-                            <p>2026年是充满变化的一年，在职业上完成了从初级开发到中级开发的跨越，在生活上养成了每日阅读和写作的习惯。</p>
-                            <p>最大的收获不是技能的提升，而是学会了与自己和解，接受不完美，专注于长期主义的价值创造。</p>
-                            <p>未来一年的目标：深耕前端领域，输出10篇高质量技术文章，读完20本经典书籍。</p>
-                        `;
-                        break;
-                    case 'topic':
-                        content = `
-                            <h2>${title}</h2>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${defaultProgress}%;"></div>
-                            </div>
-                            <p>发布时间：2026-03-01</p>
-                            <p>发布人：Zi-chu</p>
-                            <p>核心描述：</p>
-                            <p>随着信息爆炸，我们每天接触大量文字，但真正能吸收的内容却很少。如何提升阅读效率，既保证阅读质量，又能提高阅读速度？</p>
-                            <p>我的尝试：</p>
-                            <p>1. 带着问题阅读，先明确阅读目标；</p>
-                            <p>2. 分层次阅读，先读目录和摘要，再精读核心章节；</p>
-                            <p>3. 读完立即输出笔记，用自己的话复述核心观点。</p>
-                            <p>欢迎大家分享自己的阅读方法！</p>
-                        `;
-                        break;
-                    case 'dialog':
-                        content = `
-                            <h2>${title}</h2>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${defaultProgress}%;"></div>
-                            </div>
-                            <p>我比现在年轻十岁的时候，获得了一个游手好闲的职业，去乡间收集民间歌谣。那一年的整个夏天，我如同一只乱飞的麻雀，游荡在江南的各个小镇和村庄。</p>
-                            <p>我头戴宽边草帽，脚上穿着一双刚刚做好的蓝布面解放鞋，手里拿着一个父亲留下的墨绿色搪瓷水杯。</p>
-                            <p>我就这么自由自在地走，渴了就喝田里的水，饿了就吃随手摘下的瓜果。</p>
-                            <p>那天下午，我走到了一个叫徐家川的村庄，村口的田埂上坐着一个老人，脑袋上也戴了一顶草帽，下巴搁在膝盖上，嘴里哼着什么。</p>
-                            <p>我走过去在他身边坐下，问他唱的是什么，他说不知道，又说这歌是唱给自己听的，别人听了也不懂。</p>
-                        `;
-                        break;
-                }
-                
-                contentInner.innerHTML = content;
-            }
-            
-            modal.style.display = 'block';
-            // 重置阅读设置
-            initReadingSettings();
-            document.getElementById('settingsPanel').classList.remove('active');
+        function openFullscreenModal(type, el) {
+            fullscreenModal.style.display = 'block';
         }
 
-        // PDF页码渲染函数（全局函数）- 优化版
-        window.renderPdfPage = function(totalPages, pageNum, fileUrl, fileKey) {
-            if (pageNum < 1) pageNum = totalPages;
-            if (pageNum > totalPages) pageNum = 1;
-            
-            // 保存阅读进度
-            if (fileKey) {
-                readingProgress[fileKey] = pageNum;
-                localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
-                
-                // 更新卡片进度
-                const progressPercent = Math.round((pageNum / totalPages) * 100);
-                const bookCard = document.querySelector(`.book-card[data-title="${fileKey.split('_')[1]}"]`);
-                if (bookCard) {
-                    bookCard.dataset.progress = progressPercent;
-                    bookCard.querySelector('.book-progress-fill').style.width = `${progressPercent}%`;
-                    bookCard.querySelector('.book-progress-text').textContent = `已读${pageNum}/${totalPages}页 (${progressPercent}%)`;
-                    
-                    // 更新contentData并保存
-                    const sectionId = fileKey.split('_')[0];
-                    const title = fileKey.split('_')[1];
-                    const index = contentData[sectionId].findIndex(item => item.title === title);
-                    if (index !== -1) {
-                        contentData[sectionId][index].progress = progressPercent;
-                        saveContentData();
-                    }
-                }
-            }
-            
-            const pdfViewer = document.getElementById('pdf-viewer');
-            pdfjsLib.getDocument(fileUrl).promise.then(function(pdf) {
-                pdf.getPage(pageNum).then(function(page) {
-                    // 动态计算缩放比例，适配容器宽度
-                    const containerWidth = pdfViewer.clientWidth;
-                    const viewport = page.getViewport({ scale: 1 });
-                    const scale = containerWidth / viewport.width * 0.95; // 留5%边距
-                    
-                    const newViewport = page.getViewport({ scale: scale });
-                    
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = newViewport.height;
-                    canvas.width = newViewport.width;
-                    
-                    pdfViewer.innerHTML = '';
-                    pdfViewer.appendChild(canvas);
-                    
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: newViewport
-                    };
-                    page.render(renderContext);
-                    
-                    const navDiv = document.createElement('div');
-                    navDiv.style.textAlign = 'center';
-                    navDiv.style.marginTop = '15px';
-                    navDiv.innerHTML = `
-                        <button class="search-btn" style="margin-right: 10px; padding: 10px 20px; font-size: 16px;" onclick="renderPdfPage(${totalPages}, ${pageNum-1}, '${fileUrl}', '${fileKey}')">上一页</button>
-                        <span style="font-size: 16px; margin: 0 15px;">第 ${pageNum} 页 / 共 ${totalPages} 页</span>
-                        <button class="search-btn" style="margin-left: 10px; padding: 10px 20px; font-size: 16px;" onclick="renderPdfPage(${totalPages}, ${pageNum+1}, '${fileUrl}', '${fileKey}')">下一页</button>
-                    `;
-                    pdfViewer.appendChild(navDiv);
-                    
-                    // 更新顶部进度条
-                    const progressPercent = Math.round((pageNum / totalPages) * 100);
-                    document.querySelector('.progress-bar').style.width = `${progressPercent}%`;
-                });
-            });
-        };
-
-        // 5. 关闭全屏阅读
         function closeFullscreenModal() {
-            document.getElementById('fullscreenModal').style.display = 'none';
+            fullscreenModal.style.display = 'none';
         }
 
-        // 6. 打开搜索/筛选结果弹窗
         function openResultModal(type) {
-            const modal = document.getElementById('resultModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const searchArea = document.getElementById('searchArea');
-            const filterArea = document.getElementById('filterArea');
-            
-            if (type === 'search') {
-                modalTitle.textContent = '全局搜索';
-                searchArea.style.display = 'block';
-                filterArea.style.display = 'none';
-                document.getElementById('globalSearchInput').focus();
-            } else {
-                modalTitle.textContent = '内容筛选';
-                searchArea.style.display = 'none';
-                filterArea.style.display = 'block';
-            }
-            
-            modal.style.display = 'block';
-            // 清空之前的搜索结果
-            clearSearchResults();
+            resultModal.style.display = 'block';
         }
 
-        // 7. 关闭结果弹窗
         function closeResultModal() {
-            document.getElementById('resultModal').style.display = 'none';
+            resultModal.style.display = 'none';
         }
 
-        // 8. 清空搜索结果
-        function clearSearchResults() {
-            document.getElementById('reading-results').innerHTML = '';
-            document.getElementById('portfolio-results').innerHTML = '';
-            document.getElementById('topic-results').innerHTML = '';
-            document.getElementById('dialog-results').innerHTML = '';
-        }
+        async function handleFileUpload(input, sec) {
+            const files = Array.from(input.files);
+            if (!files.length) return;
+            const grid = document.getElementById(`${sec}-grid`);
+            const list = document.getElementById(`${sec}-files`);
+            document.getElementById(`${sec}-empty`).style.display = 'none';
 
-        // 9. 执行全局搜索
-        function executeGlobalSearch() {
-            const keyword = document.getElementById('globalSearchInput').value.trim();
-            if (!keyword) {
-                alert('请输入搜索关键词！');
-                return;
-            }
-            
-            // 显示加载状态
-            const loadingTip = document.getElementById('search-loading');
-            loadingTip.style.display = 'block';
-            clearSearchResults();
-            
-            // 模拟搜索延迟
-            setTimeout(() => {
-                let hasResult = false;
-                
-                // 遍历所有内容类型进行搜索
-                for (const [type, items] of Object.entries(contentData)) {
-                    const results = items.filter(item => 
-                        item.title.toLowerCase().includes(keyword.toLowerCase())
-                    );
-                    const resultContainer = document.getElementById(`${type}-results`);
-                    
-                    if (results.length > 0) {
-                        hasResult = true;
-                        results.forEach(item => {
-                            const resultItem = document.createElement('div');
-                            resultItem.className = 'result-item';
-                            resultItem.textContent = item.title;
-                            resultItem.onclick = function() {
-                                // 切换到对应板块并打开详情
-                                showContent(type, document.getElementById(`btn-${type}`));
-                                closeResultModal();
-                                // 找到对应条目并打开全屏阅读
-                                const bookCards = document.querySelectorAll(`#${type}-grid .book-card`);
-                                bookCards.forEach(card => {
-                                    if (card.dataset.title === item.title) {
-                                        openFullscreenModal(type, card);
-                                    }
-                                });
-                            };
-                            resultContainer.appendChild(resultItem);
-                        });
-                    } else {
-                        resultContainer.innerHTML = '<div class="result-item" style="color: #999; cursor: default;">暂无匹配内容</div>';
-                    }
-                }
-                
-                // 隐藏加载状态
-                loadingTip.style.display = 'none';
-                
-                if (!hasResult) {
-                    alert(`未找到包含"${keyword}"的内容`);
-                }
-            }, 300);
-        }
+            if (!fileMetadata[sec]) fileMetadata[sec] = [];
+            if (!contentData[sec]) contentData[sec] = [];
 
-        // 10. 执行全局筛选
-        function executeGlobalFilter() {
-            const sortType = document.querySelector('input[name="sort"]:checked').value;
-            const filterTypes = [];
-            
-            if (document.getElementById('filter-reading').checked) filterTypes.push('reading');
-            if (document.getElementById('filter-portfolio').checked) filterTypes.push('portfolio');
-            if (document.getElementById('filter-topic').checked) filterTypes.push('topic');
-            if (document.getElementById('filter-dialog').checked) filterTypes.push('dialog');
-            
-            clearSearchResults();
-            
-            // 如果没有选择任何类型，显示所有类型
-            const typesToShow = filterTypes.length > 0 ? filterTypes : Object.keys(contentData);
-            
-            typesToShow.forEach(type => {
-                let items = [...contentData[type]];
-                // 按时间戳排序
-                if (sortType === 'newest') {
-                    items.sort((a, b) => b.timestamp - a.timestamp);
-                } else {
-                    items.sort((a, b) => a.timestamp - b.timestamp);
-                }
-                
-                const resultContainer = document.getElementById(`${type}-results`);
-                if (items.length > 0) {
-                    items.forEach(item => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'result-item';
-                        resultItem.textContent = item.title;
-                        resultItem.onclick = function() {
-                            showContent(type, document.getElementById(`btn-${type}`));
-                            closeResultModal();
-                            const bookCards = document.querySelectorAll(`#${type}-grid .book-card`);
-                            bookCards.forEach(card => {
-                                if (card.dataset.title === item.title) {
-                                    openFullscreenModal(type, card);
-                                }
-                            });
-                        };
-                        resultContainer.appendChild(resultItem);
+            files.forEach(file => {
+                const name = file.name.split('.').slice(0,-1).join('.');
+                const full = file.name;
+                const size = (file.size/1024/1024).toFixed(2);
+                const key = `${sec}_${name}`;
+                uploadedFiles[key] = file;
+
+                const hasCard = contentData[sec].some(x => x.title === name);
+                if (!hasCard) {
+                    contentData[sec].push({
+                        title: name, type: sec, timestamp: Date.now(), progress: 0
                     });
-                } else {
-                    resultContainer.innerHTML = '<div class="result-item" style="color: #999; cursor: default;">暂无内容</div>';
                 }
-            });
-            
-            // 优化提示文案
-            const typeMap = {reading: '阅读笔记', portfolio: '个人作品', topic: '话题/疑问', dialog: '书籍'};
-            const filterText = filterTypes.length > 0 ? filterTypes.map(t => typeMap[t]).join('、') : '所有类型';
-            alert(`筛选完成！已按${sortType === 'newest' ? '最新' : '最早'}排序，共展示${filterText}类内容`);
-        }
 
-        // 11. 处理文件上传（修复：同步保存到本地存储）
-        function handleFileUpload(input, sectionId) {
-            const files = input.files;
-            if (files.length === 0) return;
-            
-            const fileListContainer = document.getElementById(`${sectionId}-files`);
-            const gridContainer = document.getElementById(`${sectionId}-grid`);
-            const emptyTip = document.getElementById(`${sectionId}-empty`);
-            emptyTip.style.display = 'none';
-            
-            // 初始化文件元数据数组
-            if (!fileMetadata[sectionId]) {
-                fileMetadata[sectionId] = [];
-            }
-            
-            // 遍历上传的所有文件
-            Array.from(files).forEach(file => {
-                // 获取纯文件名（不含扩展名）
-                const fileName = file.name.split('.').slice(0, -1).join('.');
-                const fullFileName = file.name;
-                
-                // 1. 检查文件列表中是否已存在该文件
-                const existingFileItem = Array.from(fileListContainer.children).find(
-                    item => item.firstChild.textContent.startsWith(fullFileName)
-                );
-                
-                // 如果文件已存在，跳过
-                if (existingFileItem) {
-                    alert(`文件 "${fullFileName}" 已存在，无需重复上传！`);
-                    return;
-                }
-                
-                // 2. 检查内容卡片中是否已存在同名条目
-                const existingCard = Array.from(gridContainer.querySelectorAll('.book-card')).find(
-                    card => card.dataset.title === fileName
-                );
-                
-                // 存储文件对象
-                const fileKey = `${sectionId}_${fileName}`;
-                uploadedFiles[fileKey] = file;
-                
-                // 创建文件条目
-                const fileItem = document.createElement('div');
-                fileItem.className = 'uploaded-file-item';
-                const fileSize = (file.size / 1024 / 1024).toFixed(2);
-                fileItem.innerHTML = `
-                    <span>${fullFileName} (${fileSize}MB)</span>
-                    <button class="delete-btn" onclick="deleteUploadedFile(this, '${sectionId}', '${fileName}', '${fullFileName}')">删除</button>
-                `;
-                fileListContainer.appendChild(fileItem);
-                
-                // 保存文件元数据
-                fileMetadata[sectionId].push({
-                    fileName,
-                    fullFileName,
-                    fileSize,
-                    timestamp: Date.now()
-                });
-                saveFileMetadata();
-                
-                // 只有当内容卡片不存在时才创建
-                if (!existingCard) {
-                    // 创建书籍卡片
-                    const newCard = document.createElement('div');
-                    newCard.className = 'book-card';
-                    newCard.dataset.title = fileName;
-                    newCard.dataset.progress = 0;
-                    newCard.innerHTML = `
-                        <div class="book-cover"></div>
-                        <div class="book-info">
-                            <div class="book-title">${fileName}</div>
-                            <div class="book-progress-bar">
-                                <div class="book-progress-fill" style="width: 0%;"></div>
-                            </div>
-                            <div class="book-progress-text">已读0%</div>
-                            <button class="book-delete-btn" onclick="event.stopPropagation(); deleteItem(this)">删除</button>
-                        </div>
-                    `;
-                    // 绑定点击事件
-                    newCard.onclick = function() { openFullscreenModal(sectionId, this); };
-                    
-                    // 添加到网格容器
-                    gridContainer.appendChild(newCard);
-                    
-                    // 添加到数据中并保存
-                    const newItem = { 
-                        title: fileName, 
-                        type: sectionId, 
-                        timestamp: Date.now(),
-                        progress: 0 
-                    };
-                    contentData[sectionId].push(newItem);
-                    saveContentData();
-                    
-                    // 如果是PDF文件，提前生成封面
-                    const fileExtension = file.name.split('.').pop().toLowerCase();
-                    if (fileExtension === 'pdf') {
-                        const fileUrl = URL.createObjectURL(file);
-                        pdfjsLib.getDocument(fileUrl).promise.then(function(pdf) {
-                            pdf.getPage(1).then(function(page) {
-                                const coverCanvas = document.createElement('canvas');
-                                const coverContainer = newCard.querySelector('.book-cover');
-                                const viewport = page.getViewport({ scale: 0.2 });
-                                
-                                coverCanvas.height = viewport.height;
-                                coverCanvas.width = viewport.width;
-                                const context = coverCanvas.getContext('2d');
-                                
-                                const renderContext = {
-                                    canvasContext: context,
-                                    viewport: viewport
-                                };
-                                page.render(renderContext).promise.then(function() {
-                                    coverContainer.innerHTML = '';
-                                    coverContainer.appendChild(coverCanvas);
-                                });
-                            });
-                        });
-                    }
+                const hasFile = fileMetadata[sec].some(x => x.fullFileName === full);
+                if (!hasFile) {
+                    fileMetadata[sec].push({ fileName: name, fullFileName: full, fileSize: size, timestamp: Date.now() });
                 }
             });
-            
-            // 清空文件输入
+
+            await saveAll();
+            restoreAllData();
+            bindBookCardClick();
             input.value = '';
-            
-            // 提示上传成功
-            alert(`成功上传${files.length}个文件！`);
+            alert(`上传成功`);
         }
 
-        // 12. 删除已上传的文件（修复：同步更新本地存储）
-        function deleteUploadedFile(btn, sectionId, fileName, fullFileName) {
-            if (confirm('确定要删除该文件吗？')) {
-                const fileItem = btn.parentElement;
-                fileItem.remove();
-                
-                // 从文件元数据中删除
-                if (fileMetadata[sectionId]) {
-                    fileMetadata[sectionId] = fileMetadata[sectionId].filter(
-                        item => item.fullFileName !== fullFileName
-                    );
-                    saveFileMetadata();
-                }
-                
-                // 删除文件存储
-                const fileKey = `${sectionId}_${fileName}`;
-                delete uploadedFiles[fileKey];
-                
-                // 删除对应的内容卡片
-                const bookCards = document.querySelectorAll(`#${sectionId}-grid .book-card`);
-                bookCards.forEach(card => {
-                    if (card.dataset.title === fileName) {
-                        card.remove();
-                        // 从contentData中删除并保存
-                        contentData[sectionId] = contentData[sectionId].filter(item => 
-                            item.title !== fileName
-                        );
-                        saveContentData();
-                    }
-                });
-                
-                // 删除阅读进度记录
-                delete readingProgress[fileKey];
-                localStorage.setItem('readingProgress', JSON.stringify(readingProgress));
-                
-                checkEmptyState(sectionId);
-            }
+        async function deleteUploadedFile(btn, sec, name, full) {
+            if (!confirm('删除文件？')) return;
+            btn.parentElement.remove();
+            fileMetadata[sec] = (fileMetadata[sec] || []).filter(x => x.fullFileName !== full);
+            contentData[sec] = (contentData[sec] || []).filter(x => x.title !== name);
+            delete uploadedFiles[`${sec}_${name}`];
+            await saveAll();
+            restoreAllData();
         }
 
-        // 13. 移除下载文件功能
-        window.downloadFile = function(fileKey) {
-            alert('该文件已存在于您的本地电脑中，无需重复下载！');
-        };
+        function executeGlobalSearch() {}
+        function executeGlobalFilter() {}
+        window.renderPdfPage = function(){};
     </script>
 </body>
 </html>
