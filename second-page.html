@@ -754,34 +754,14 @@
     <div class="bottom-right-info">欢迎添加作者vx:zc3029410588反馈使用问题，谢谢合作</div>
 
     <script>
-        // ====================== 后端接口地址（换成你自己的）======================
-        const API_BASE = "http://localhost:3000";
-
-        // ====================== 从后端加载数据 ======================
-        async function loadFromBackend(key) {
-            try {
-                const res = await fetch(`${API_BASE}/get-memory/${key}`);
-                const data = await res.json();
-                if (data.success && data.data) {
-                    return JSON.parse(data.data);
-                }
-            } catch (e) {
-                console.log("后端加载失败，使用本地默认数据");
-            }
-            return null;
+        // ====================== 纯本地存储，永远不丢数据，无需后端 ======================
+        function saveToLocal(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
         }
 
-        // ====================== 保存到后端 ======================
-        async function saveToBackend(key, value) {
-            try {
-                await fetch(`${API_BASE}/save-memory`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ key, value: JSON.stringify(value) })
-                });
-            } catch (e) {
-                console.log("同步后端失败，数据仅本地生效");
-            }
+        function loadFromLocal(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
         }
 
         // ====================== 全局数据初始化 ======================
@@ -790,32 +770,18 @@
         const uploadedFiles = {};
         let readingProgress = {};
 
-        // 默认数据
         const defaultData = {
-            reading: [
-                { title: "《活着》阅读笔记 - 第一章", type: "reading", timestamp: 1740969600000, progress: 30 },
-                { title: "《百年孤独》核心感悟", type: "reading", timestamp: 1740883200000, progress: 70 }
-            ],
-            portfolio: [
-                { title: "2026年度总结 - 个人成长", type: "portfolio", timestamp: 1740796800000, progress: 100 },
-                { title: "前端开发实战 - 项目复盘", type: "portfolio", timestamp: 1740710400000, progress: 80 }
-            ],
-            topic: [
-                { title: "如何提升阅读效率？", type: "topic", timestamp: 1740624000000, progress: 70 },
-                { title: "前端性能优化的核心思路", type: "topic", timestamp: 1740537600000, progress: 50 }
-            ],
-            dialog: [
-                { title: "《活着》- 余华（全本）", type: "dialog", timestamp: 1740451200000, progress: 10 },
-                { title: "《思考，快与慢》- 卡尼曼", type: "dialog", timestamp: 1740364800000, progress: 15 }
-            ]
+            reading: [],
+            portfolio: [],
+            topic: [],
+            dialog: []
         };
 
         // ====================== 启动加载 ======================
-        document.addEventListener("DOMContentLoaded", async function () {
-            // 从云端加载
-            contentData = await loadFromBackend("contentData") || defaultData;
-            fileMetadata = await loadFromBackend("fileMetadata") || {};
-            readingProgress = await loadFromBackend("readingProgress") || {};
+        document.addEventListener("DOMContentLoaded", function () {
+            contentData = loadFromLocal("contentData") || defaultData;
+            fileMetadata = loadFromLocal("fileMetadata") || {};
+            readingProgress = loadFromLocal("readingProgress") || {};
 
             restoreAllData();
             initEventBindings();
@@ -824,14 +790,14 @@
             initReadingSettings();
         });
 
-        // ====================== 保存（自动同步云端）======================
-        async function saveAll() {
-            await saveToBackend("contentData", contentData);
-            await saveToBackend("fileMetadata", fileMetadata);
-            await saveToBackend("readingProgress", readingProgress);
+        // ====================== 保存到本地 ======================
+        function saveAll() {
+            saveToLocal("contentData", contentData);
+            saveToLocal("fileMetadata", fileMetadata);
+            saveToLocal("readingProgress", readingProgress);
         }
 
-        // ====================== 下面所有逻辑完全和你原来一样，只是保存时同步后端 ======================
+        // ====================== 数据恢复 ======================
         function restoreAllData() {
             ['reading', 'portfolio', 'topic', 'dialog'].forEach(sectionId => {
                 const grid = document.getElementById(`${sectionId}-grid`);
@@ -894,14 +860,14 @@
         }
 
         function initReadingSettings() {
-            const inner = fullscreen-content-inner;
+            const inner = fullscreenContentInner;
             inner.style.fontSize = '16px';
             inner.style.backgroundColor = '#fff';
             inner.style.lineHeight = '2';
         }
 
         function updateReadingSettings() {
-            const inner = fullscreen-content-inner;
+            const inner = fullscreenContentInner;
             inner.style.fontSize = fontSizeSelect.value + 'px';
             inner.style.backgroundColor = bgColorSelect.value;
             inner.style.lineHeight = lineHeightSelect.value;
@@ -924,13 +890,13 @@
             checkEmptyState(sec);
         }
 
-        async function deleteItem(btn) {
+        function deleteItem(btn) {
             if (!confirm('确定删除？')) return;
             const card = btn.closest('.book-card');
             const sec = card.closest('.content-section').id;
             const title = card.dataset.title;
             contentData[sec] = (contentData[sec] || []).filter(x => x.title !== title);
-            await saveAll();
+            saveAll();
             card.remove();
             checkEmptyState(sec);
         }
@@ -957,11 +923,9 @@
             resultModal.style.display = 'none';
         }
 
-        async function handleFileUpload(input, sec) {
+        function handleFileUpload(input, sec) {
             const files = Array.from(input.files);
             if (!files.length) return;
-            const grid = document.getElementById(`${sec}-grid`);
-            const list = document.getElementById(`${sec}-files`);
             document.getElementById(`${sec}-empty`).style.display = 'none';
 
             if (!fileMetadata[sec]) fileMetadata[sec] = [];
@@ -974,33 +938,30 @@
                 const key = `${sec}_${name}`;
                 uploadedFiles[key] = file;
 
-                const hasCard = contentData[sec].some(x => x.title === name);
-                if (!hasCard) {
+                if (!contentData[sec].some(x => x.title === name)) {
                     contentData[sec].push({
                         title: name, type: sec, timestamp: Date.now(), progress: 0
                     });
                 }
-
-                const hasFile = fileMetadata[sec].some(x => x.fullFileName === full);
-                if (!hasFile) {
+                if (!fileMetadata[sec].some(x => x.fullFileName === full)) {
                     fileMetadata[sec].push({ fileName: name, fullFileName: full, fileSize: size, timestamp: Date.now() });
                 }
             });
 
-            await saveAll();
+            saveAll();
             restoreAllData();
             bindBookCardClick();
             input.value = '';
             alert(`上传成功`);
         }
 
-        async function deleteUploadedFile(btn, sec, name, full) {
+        function deleteUploadedFile(btn, sec, name, full) {
             if (!confirm('删除文件？')) return;
             btn.parentElement.remove();
             fileMetadata[sec] = (fileMetadata[sec] || []).filter(x => x.fullFileName !== full);
             contentData[sec] = (contentData[sec] || []).filter(x => x.title !== name);
             delete uploadedFiles[`${sec}_${name}`];
-            await saveAll();
+            saveAll();
             restoreAllData();
         }
 
